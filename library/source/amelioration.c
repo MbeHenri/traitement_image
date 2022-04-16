@@ -10,15 +10,16 @@ int **transform_linear(int **d, unsigned int n_ligne, unsigned int n_col)
     unsigned int i, j;
     int LUT[256];
     for (i = 0; i < n_ligne; i++)
-        LUT[i] = (int)( (255 * (d[i][j] - min)) / (max - min) );
+        LUT[i] = (255 * (d[i][j] - min)) / (max - min);
     for (i = 0; i < n_ligne; i++)
     {
         for (j = 0; j < n_col; j++)
         {
             result[i][j] = LUT[d[i][j]];
             if (result[i][j] < 0)
-                result[i][j] = 0 if (result[i][j] > 255)
-                    result[i][j] = 255
+                result[i][j] = 0;
+            if (result[i][j] > 255)
+                result[i][j] = 255;
         }
     }
     return result;
@@ -29,15 +30,16 @@ int **transform_linear_satur(int **d, unsigned int n_ligne, unsigned int n_col, 
     unsigned int i, j;
     int LUT[256];
     for (i = 0; i < n_ligne; i++)
-        LUT[i] = (int)( (255 * (d[i][j] - c_min)) / (c_max - c_min) );
+        LUT[i] = (255 * (d[i][j] - c_min)) / (c_max - c_min);
     for (i = 0; i < n_ligne; i++)
     {
         for (j = 0; j < n_col; j++)
         {
             result[i][j] = LUT[d[i][j]];
             if (result[i][j] < 0)
-                result[i][j] = 0 if (result[i][j] > 255)
-                    result[i][j] = 255
+                result[i][j] = 0;
+            if (result[i][j] > 255)
+                result[i][j] = 255;
         }
     }
     return result;
@@ -60,7 +62,8 @@ int **egalizer_hist(int **d, unsigned int n_ligne, unsigned int n_col)
             c[i] = c[i - 1] + hist[i] / (n_ligne * n_col);
         }
     }
+    int j = 0;
     for (i = 0; i < n_ligne; i++)
         for (j = 0; j < n_col; j++)
-            result[i][j]= (int)( c[d[i][j]]*255 );
+            result[i][j] = c[d[i][j]] * 255;
 }

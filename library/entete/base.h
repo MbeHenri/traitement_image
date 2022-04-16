@@ -7,6 +7,7 @@
 #include "Vector.h"
 
 int **create_matrix(unsigned int n_ligne, unsigned int n_col);
+double **create_matrix_d(unsigned int n_ligne, unsigned int n_col);
 void free_matrix(int **d, unsigned int n_ligne, unsigned int n_col);
 
 

@@ -24,7 +24,26 @@ int **create_matrix(unsigned int n_ligne, unsigned int n_col)
     }
     return d;
 }
-
+double **create_matrix_d(unsigned int n_ligne, unsigned int n_col)
+{
+    double **d = (double **)malloc(n_ligne * sizeof(double *));
+    if (d == NULL)
+    {
+        printf("[ il est impossible d'allouer de la memoire pour les valeurs de pixels ]\n");
+        exit(1);
+    }
+    int i = 0, j = 0;
+    for (i = 0; i < img->nLigne; i++)
+    {
+        d[i] = (double *)malloc(n_col * sizeof(double));
+        if (d[i] == NULL)
+        {
+            printf("[ il est impossible d'allouer de la memoire pour les valeurs de pixels ]\n");
+            exit(1);
+        }
+    }
+    return d;
+}
 void free_matrix(int **d, unsigned int n_ligne, unsigned int n_col)
 {
     int i = 0;
