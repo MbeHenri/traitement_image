@@ -6,7 +6,10 @@ typedef struct Vector Vector;
 struct Vector
 {
     unsigned int n;
-    unsigned int * data;
+    int * data;
 };
+
+Vector* create_vector(unsigned int len);
+void free_vector(Vector * v);
 
 #endif

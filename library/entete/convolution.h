@@ -5,11 +5,8 @@
 #include <stdio.h>
 #include <math.h>
 
-// Structure d'une couleur
-typedef struct Filtre Filtre;
-struct Filtre
-{
-    unsigned int pas;
-};
+int ** filtre_gausien(unsigned int pas);
+int ** read_filtre(char * path);
+
 
 #endif // CONVOLUTION_H_INCLUDED

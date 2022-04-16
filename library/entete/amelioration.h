@@ -1,17 +1,16 @@
 #ifndef AMELIORATION_H_INCLUDED
 #define AMELIORATION_H_INCLUDED
-#include "Image.h"
+#include "base.h"
 
 /*
     Amelioration d'images
 */
-//pour les images a couleur de gris
-ImageG* transform_linear(ImageG* img);
-ImageG* transform_linear_satur(ImageG* img);
-ImageG* transform_linear_morceau(ImageG* img);
-ImageG* transform_not_linear(ImageG* img);
-ImageG* egalizer_hist(ImageG* img, char type);
-ImageG* egalizer_hist_local(ImageG* img, int pasVoisin);
+int **transform_linear(int **d, unsigned int n_ligne, unsigned int n_col);
+int ** transform_linear_satur(int **d, unsigned int n_ligne, unsigned int n_col, int c_min, int c_max);
+int ** transform_linear_morceau(int **d, unsigned int n_ligne, unsigned int n_col);
+int ** transform_not_linear(int **d, unsigned int n_ligne, unsigned int n_col);
+int ** egalizer_hist(int **d, unsigned int n_ligne, unsigned int n_col, char type);
+int ** egalizer_hist_local(int **d, unsigned int n_ligne, unsigned int n_col, int pasVoisin);
 
 
 #endif // AMELIORATION_H_INCLUDED

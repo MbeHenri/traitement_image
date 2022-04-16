@@ -5,7 +5,8 @@
 
 int main(int argc, char const *argv[])
 {
-    double m = pow(10,2);
-    printf("%f", m);
+    double* m = malloc(sizeof(double));
+    *m = pow(10,2);
+    printf("%f", *m);
     return 0;
 }
