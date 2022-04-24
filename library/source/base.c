@@ -3,6 +3,21 @@
 #include <math.h>
 
 #include "../entete/base.h"
+#include "../entete/Vector.h"
+
+Vector_d* echantillonage(double min, double max, double ecart){
+    unsigned int n=0;
+    while (min + ecart*n > max || min + ecart*(n+1) >= max ){
+        n++;
+    }
+    
+    Vector_d * result = create_vector_d(n+1);
+    unsigned int i=0;
+    for (i = 0; i < (n+1); i++)
+        result->data[i] = min + ecart*i;
+    
+    return result;
+}
 
 int **create_matrix(unsigned int n_ligne, unsigned int n_col)
 {

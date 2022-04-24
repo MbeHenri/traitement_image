@@ -6,6 +6,8 @@
 #include <math.h>
 #include "Vector.h"
 
+Vector_d* echantillonage(double min, double max, double ecart)
+
 int **create_matrix(unsigned int n_ligne, unsigned int n_col);
 double **create_matrix_d(unsigned int n_ligne, unsigned int n_col);
 void free_matrix(int **d, unsigned int n_ligne, unsigned int n_col);

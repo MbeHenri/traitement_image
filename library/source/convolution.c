@@ -2,43 +2,45 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "base.h"
+#include "../entete/base.h"
+#include "../entete/convolution.h"
 
 int **filtre_gausien(unsigned int pas, double ecart_type)
 {
     unsigned int n = 2 * pas + 1;
     int **result = create_matrix(n, n);
-    unsigned int u,v;
+    unsigned int u, v;
     for (u = 0; u < n; u++)
         for (v = 0; v < n; v++)
-            result[u][v]=exp(-(u*u +v*v)/(2*ecart_type*ecart_type));
+            result[u][v] = exp(-(u * u + v * v) / (2 * ecart_type * ecart_type));
     return result;
 }
 int **filtre_moyenneur(unsigned int pas)
 {
     unsigned int n = 2 * pas + 1;
     int **result = create_matrix(n, n);
-    unsigned int u,v;
+    unsigned int u, v;
     for (u = 0; u < n; u++)
         for (v = 0; v < n; v++)
-            result[u][v]=1;
+            result[u][v] = 1;
     return result;
 }
-int **read_filtre(char *path, unsigned int *pas)
+Filtre *read_filtre(char *path)
 {
     FILE *f = fopen(path, "w");
     if (f == NULL)
     {
         exit(1);
     }
-    fscanf(f, "%d\n", pas);
-    unsigned int n = 2 * (*pas) + 1;
-    int **filtre = create_matrix(n, n);
+    Filtre* result = malloc(sizeof(Filtre));
+    fscanf(f, "%d\n", result->pas);
+    unsigned int n = 2 * result->pas + 1;
+    result->data = create_matrix(n, n);
     unsigned int i, j;
     for (i = 0; i < n; i++)
         for (j = 0; j < n; j++)
-            fscanf(f, "%d", &filtre[i][j]);
-    return filtre;
+            fscanf(f, "%d", &result->data[i][j]);
+    return result;
 }
 double **norm_filtre(int **filtre, unsigned int pas)
 {
