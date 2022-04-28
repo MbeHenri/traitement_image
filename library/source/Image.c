@@ -3,15 +3,16 @@
 #include <math.h>
 
 #include "../entete/Image.h"
+#include "../entete/base.h"
 
 void free_ImageG(ImageG* img){
-    int i=0;
-    for ( i = 0; i < img->nLigne; i++)
-        free(img->data[i]);
-    free(img->data);
+    free_matrix(img->data, img->nLigne);
     free(img);
 }
-
+void free_ImageB(ImageB * img){
+    free_matrix(img->data, img->nLigne);
+    free(img);
+}
 ImageG * read_G(FILE * f){
     ImageG * img = (ImageG *) malloc(sizeof(ImageG));
     if ( img == NULL){
@@ -24,87 +25,108 @@ ImageG * read_G(FILE * f){
     }
     fseek(f, -1, SEEK_CUR);
     
-    fscanf(f, "%d %d", &img->nLigne, &img->nColonne);
-    img->data = (unsigned int **) malloc(img->nLigne*sizeof(unsigned int*));
-    if ( img->data == NULL){
-        printf("[ il est impossible d'allouer de la memoire pour les valeurs de pixels ]\n");
-        exit(1);
-    }
-    int i=0, j=0;
-    for (i=0; i<img->nLigne; i++){
-        img->data[i]=(unsigned int *) malloc(img->nColonne*sizeof(unsigned int)); 
-        if ( img->data[i] == NULL){
-            printf("[ il est impossible d'allouer de la memoire pour les valeurs de pixels ]\n");
-            exit(1);
-        }
-    }
+    fscanf(f, "%d %d", &img->nColonne, &img->nLigne);
+    img->data = create_matrix(img->nLigne, img->nColonne);
+    unsigned int i,j;
     for (i = 0; i < img->nLigne; i++)
         for (j = 0; j < img->nColonne; j++)
             fscanf(f, "%d", &img->data[i][j]);
             
     return img;
 }
-
-unsigned int * histogram_G(ImageG * img){
-    unsigned int * hist = (unsigned int *)malloc( 255 * sizeof(unsigned int));
-    if (hist == NULL){
-       printf("[ impossible d'allouer de la memoire pour l'histogramme ]\n");
-       exit(1);
+ImageB* read_B(FILE * f){
+    ImageB * img = (ImageB *) malloc(sizeof(ImageB));
+    if ( img == NULL){
+        printf("[ il est impossible d'allouer de la memoire pour l'image ]\n");
+        exit(1);
     }
-    unsigned int i=0,j=0;
-    for ( i = 0; i < 256; i++)
-        hist[i] = 0;
-        
-    for ( i = 0; i < img->nLigne; i++)
-        for ( j = 0; j < img->nColonne; j++)
-            hist[img->data[i][j]]++;
+    while (fgetc(f) == '#' )
+    {
+        while (getc(f)!='\n');
+    }
+    fseek(f, -1, SEEK_CUR);
     
-    return hist;
+    fscanf(f, "%d %d\n", &img->nColonne, &img->nLigne);
+    img->data = create_matrix(img->nLigne, img->nColonne);
+    unsigned int i,j;
+    for (i = 0; i < img->nLigne; i++){
+        for (j = 0; j < img->nColonne; j++){
+            char c = fgetc(f);
+            if (c == '0'){
+                img->data[i][j] = 0;
+            }else if (c == '1'){
+                img->data[i][j] = 1;
+            }else{
+                c = fgetc(f);
+                if (c == '0')
+                    img->data[i][j] = 0;
+                else
+                    img->data[i][j] = 1;
+            }
+        }
+    }
+    return img;
+}
+void write_G(ImageG* img, const char * path){
+    FILE* f = fopen(path, "w");
+    if(f == NULL){
+        exit(1);
+    }
+    fprintf(f,"P2\n");
+    fprintf(f,"# realisation de Mbe\n");
+    fprintf(f,"%d %d\n", img->nColonne, img->nLigne);
+    unsigned int i,j;
+    for ( i = 0; i < img->nLigne; i++){
+        for ( j = 0; j < img->nColonne; j++){
+            fprintf(f,"%d\n", img->data[i][j]);
+        }
+    }
+    fclose(f);
+}
+void write_B(ImageB* img, const char * path){
+    FILE* f = fopen(path, "w");
+    if(f == NULL){
+        exit(1);
+    }
+    fprintf(f,"P1\n");
+    fprintf(f,"# realisation de Mbe\n");
+    fprintf(f,"%d %d\n", img->nColonne, img->nLigne);
+    unsigned int i,j,k=0;
+    for ( i = 0; i < img->nLigne; i++){
+        for ( j = 0; j < img->nColonne ; j++){
+            if (img->data[i][j]==0)
+                fprintf(f,"0");
+            else 
+                fprintf(f,"1");
+        }
+        fprintf(f,"\n");
+    }
+    fclose(f);
+}
+
+int * histogram_G(ImageG * img){
+    return histogram(img->data, img->nLigne, img->nColonne);
 }
 
 double luminance_G(ImageG* img){
-    unsigned int sum=0;
-    unsigned int i=0, j=0;
-    for ( i = 0; i < img->nLigne; i++)
-        for ( j = 0; j < img->nColonne; j++)
-            sum += img->data[i][j];
-    
-    return sum / (img->nColonne * img->nLigne);
+    return luminance(img->data, img->nLigne, img->nColonne);
 }
-unsigned int max_G(ImageG * img){
-    unsigned int m = 0, i=0, j=0;
-    for ( i = 0; i < img->nLigne; i++)
-        for ( j = 0; j < img->nColonne; j++)
-            if(img->data[i][j] > m)
-                m = img->data[i][j];
-    return m;
+int max_G(ImageG * img){
+    return max_(img->data, img->nLigne, img->nColonne);
 }
-unsigned int min_G(ImageG * img){
-    unsigned int m = 255, i=0, j=0;
-    for ( i = 0; i < img->nLigne; i++)
-        for ( j = 0; j < img->nColonne; j++)
-            if(img->data[i][j] < m)
-                m = img->data[i][j];
-    return m;
-}
-double contraste_ecart_type_G(ImageG * img){
-    unsigned int i=0,j=0;
-    double moy = luminance_G(img);
-    double result = 0; 
-    for ( i = 0; i < img->nLigne; i++){
-        for ( j = 0; j < img->nColonne; j++){
-            result += pow((double) (img->data[i][j]) - moy, 2.0);
-        }
-    }
-    result /= img->nColonne*img->nLigne;
-    return sqrt(result);
-}
-double contraste_min_max_G(ImageG * img){
-    unsigned int  min = min_G(img) , max = max_G(img);
-    return ((double)(max-min))/(max+min);
+int min_G(ImageG * img){
+    return min_(img->data, img->nLigne, img->nColonne);
 }
 
-ImageG* plus(ImageG* img1, ImageG* img2){
+double contraste_ecart_type_G(ImageG * img){
+    return contraste_ecart_type(img->data, img->nLigne, img->nColonne);
+}
+
+double contraste_min_max_G(ImageG * img){
+    return contraste_min_max(img->data, img->nLigne, img->nColonne);
+}
+
+ImageG* plus_G(ImageG* img1, ImageG* img2){
     if ( img1->nLigne != img2->nLigne && img1->nColonne != img2->nColonne)
     {
         printf(" [ les images n'ont pas la meme dimension ]\n");
@@ -116,62 +138,20 @@ ImageG* plus(ImageG* img1, ImageG* img2){
         exit(1);
     }
     img->nLigne = img1->nLigne; img->nColonne = img1->nColonne;
-    img->data = (unsigned int **) malloc(img->nLigne*sizeof(unsigned int*));
-    if ( img->data == NULL){
-        printf("[ il est impossible d'allouer de la memoire pour les valeurs de pixels resultants]\n");
-        exit(1);
-    }
-    int i=0, j=0;
-    for (i=0; i<img->nLigne; i++){
-        img->data[i]=(unsigned int *) malloc(img->nColonne*sizeof(unsigned int)); 
-        if ( img->data[i] == NULL){
-            printf("[ il est impossible d'allouer de la memoire pour les valeurs de pixels resultants]\n");
-            exit(1);
-        }
-    }
-    
-    for ( i = 0; i < img->nLigne; i++){
-        for ( j = 0; j < img->nColonne; j++){
-            img->data[i][j] = img1->data[i][j] + img2->data[i][j];
-            if(img->data[i][j] > 255)
-                img->data[i][j] = 255;
-        }
-    }
+    img->data = plus_(img1->data, img2->data, img->nLigne, img->nColonne);
     return img;
 }
-ImageG* fois(ImageG* imgd ,double ratio ){
+ImageG* fois_G(ImageG* imgd ,double ratio ){
     ImageG * img = (ImageG *) malloc(sizeof(ImageG));
     if ( img == NULL){
         printf("[ il est impossible d'allouer de la memoire pour l'image resultante ]\n");
         exit(1);
     }
-    img->nLigne = img1->nLigne; img->nColonne = img1->nColonne;
-    img->data = (unsigned int **) malloc(img->nLigne*sizeof(unsigned int*));
-    if ( img->data == NULL){
-        printf("[ il est impossible d'allouer de la memoire pour les valeurs de pixels resultants]\n");
-        exit(1);
-    }
-    int i=0, j=0;
-    for (i=0; i<img->nLigne; i++){
-        img->data[i]=(unsigned int *) malloc(img->nColonne*sizeof(unsigned int)); 
-        if ( img->data[i] == NULL){
-            printf("[ il est impossible d'allouer de la memoire pour les valeurs de pixels resultants]\n");
-            exit(1);
-        }
-    }
-    
-    for ( i = 0; i < img->nLigne; i++){
-        for ( j = 0; j < img->nColonne; j++){
-            img->data[i][j] = (unsigned int)(ratio * img1->data[i][j]);
-            if(img->data[i][j] > 255)
-                img->data[i][j] = 255;
-            if(img->data[i][j] < 0)
-                img->data[i][j] = 0;
-        }
-    }
+    img->nLigne = imgd->nLigne; img->nColonne = imgd->nColonne;
+    img->data = fois_(imgd->data, img->nLigne, img->nColonne, ratio);
     return img;
 }
-ImageG* moins(ImageG* img1, ImageG* img2){
+ImageG* moins_G(ImageG* img1, ImageG* img2){
     if ( img1->nLigne != img2->nLigne && img1->nColonne != img2->nColonne){
         printf(" [ les images n'ont pas la meme dimension ]\n");
         exit(1);
@@ -182,78 +162,108 @@ ImageG* moins(ImageG* img1, ImageG* img2){
         exit(1);
     }
     img->nLigne = img1->nLigne; img->nColonne = img1->nColonne;
-    img->data = (unsigned int **) malloc(img->nLigne*sizeof(unsigned int*));
-    if ( img->data == NULL){
-        printf("[ il est impossible d'allouer de la memoire pour les valeurs de pixels resultants]\n");
-        exit(1);
-    }
-    int i=0, j=0;
-    for (i=0; i<img->nLigne; i++){
-        img->data[i]=(unsigned int *) malloc(img->nColonne*sizeof(unsigned int)); 
-        if ( img->data[i] == NULL){
-            printf("[ il est impossible d'allouer de la memoire pour les valeurs de pixels resultants]\n");
-            exit(1);
-        }
-    }
-    int v;
-    for ( i = 0; i < img->nLigne; i++){
-        for ( j = 0; j < img->nColonne; j++){
-            v = img1->data[i][j] - img2->data[i][j];
-            if(v < 0){
-                img->data[i][j] = 0;
-            }else{
-                img->data[i][j] = (unsigned int) v;
-            }
-        }
-    }
+    img->data = moins_(img1->data, img2->data, img->nLigne, img->nColonne);
     return img;
 }
 
-Vector* profil_intensite(ImageG* img, unsigned int x1 , unsigned int y1, unsigned int x2, unsigned int y2 ){
-    if ( img->nLigne <= y1 && img->nLigne <= y2 && img->nColonne <= x1 && img->nColonne <= x2){
-        printf(" [ les positions de pixels ne correspondent pas aux images ]\n");
+Vector* profil_intensite_G(ImageG* img, unsigned int x1 , unsigned int y1, unsigned int x2, unsigned int y2 ){
+    return profil_intensite_(img->data, img->nLigne, img->nLigne,x1,y1,x2,y2);
+}
+
+ImageG * draw_segmentG(ImageG* img, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, int val_replace){
+    ImageG * r = (ImageG *) malloc(sizeof(ImageG));
+    if ( r == NULL){
+        printf("[ il est impossible d'allouer de la memoire pour l'image resultante ]\n");
         exit(1);
     }
-    unsigned int x,y,v, max=0, min = 0;
-    Vector* result = NULL;
-    if (x1 == x2){
-        max = y1;
-        min = y2;
-        if (max < y2){
-            min = y1;
-            max = y2;
-        }
-        result = (Vector *) malloc((max - min + 1)*sizeof(Vector));
-        if (result == NULL){
-            printf(" [ un probleme d'allocation de memoire est survenu ]\n");
-            exit(1);
-        }
-        result->data = (unsigned int *) malloc((max - min + 1)*sizeof(unsigned int));
-        if (result->data == NULL){
-            printf(" [ un probleme d'allocation de memoire est survenu ]\n");
-            exit(1);
-        }
-        for (y = min; y <= max; y++)
-            result->data[y - min] = img->data[y][x2];
-    }else{
-        max = x1;
-        min = x2;
-        if (max < x2){
-            min = x1;
-            max = x2;
-        }
-        result = (Vector *) malloc((max - min + 1)*sizeof(Vector));
-        if (result == NULL){
-            printf(" [ un probleme d'allocation de memoire est survenu ]\n");
-            exit(1);
-        }
-        result->data = (unsigned int *) malloc((max - min + 1)*sizeof(unsigned int));
-        if (result->data == NULL){
-            printf(" [ un probleme d'allocation de memoire est survenu ]\n");
-            exit(1);
-        }
-        for (x = min; x <= max; x++)
-            result->data[x - min] = img->data[( (y2 - y1)/(x2 - x1) )*(x - x1) + y1][x]; 
+    r->nLigne = img->nLigne; r->nColonne= img->nColonne;
+    r->data = replace_line_(img->data,img->nLigne, img->nColonne, x1,y1, x2,y2, val_replace);
+    return r;
+}
+ImageG * draw_circleG(ImageG* img, unsigned int xr, unsigned int yr, double rayon, int val_replace){
+    ImageG * r = (ImageG *) malloc(sizeof(ImageG));
+    if ( r == NULL){
+        printf("[ il est impossible d'allouer de la memoire pour l'image resultante ]\n");
+        exit(1);
     }
-    return result;
+    r->nLigne = img->nLigne; r->nColonne= img->nColonne;
+    r->data = replace_circle_(img->data,img->nLigne, img->nColonne, xr, yr, rayon, val_replace);
+    return r;
+}
+
+ImageG * drawDisqueG(ImageG* img, unsigned int xr, unsigned int yr, double rayon, int val_replace){
+    ImageG * r = (ImageG *) malloc(sizeof(ImageG));
+    if ( r == NULL){
+        printf("[ il est impossible d'allouer de la memoire pour l'image resultante ]\n");
+        exit(1);
+    }
+    r->nLigne = img->nLigne; r->nColonne= img->nColonne;
+    r->data = replace_disque_(img->data,img->nLigne, img->nColonne, xr, yr, rayon, val_replace);
+    return r;
+}
+
+ImageB* binarisationG(ImageG* img, double seuil){
+    ImageB* r = malloc(sizeof(ImageB));
+    if(r == NULL){
+        exit(1);
+    }
+    r->nLigne = img->nLigne; r->nColonne= img->nColonne;
+    r->data = binarisation(img->data, img->nLigne, img->nColonne, seuil);
+    return r;
+}
+ImageG* grisB(ImageB* img){
+    ImageG* r = malloc(sizeof(ImageG));
+    if(r == NULL){
+        exit(1);
+    }
+    r->nLigne = img->nLigne; r->nColonne= img->nColonne;
+    int** aux = changer_plage(img->data, img->nLigne, img->nColonne, 0,1,0,255);
+    r->data = difference(aux, img->nLigne, img->nColonne, 255);
+    free_matrix(aux, img->nLigne);
+    return r;
+}
+ImageG* inverseG(ImageG* img){
+    ImageG* r = malloc(sizeof(ImageG));
+    if(r == NULL){
+        exit(1);
+    }
+    r->nLigne = img->nLigne; r->nColonne= img->nColonne;
+    r->data = difference(img->data, img->nLigne, img->nColonne, 255);
+    return r;
+}
+ImageG* etG(ImageB* img1, ImageG* img2){
+    ImageG* r = malloc(sizeof(ImageG));
+    if(r == NULL){
+        exit(1);
+    }
+    r->nLigne = img1->nLigne; r->nColonne= img1->nColonne;
+    r->data = et_(img1->data, img2->data, img1->nLigne, img1->nColonne, 0);
+    return r;
+}
+ImageB* etB(ImageB* img1, ImageB* img2){
+    ImageB* r = malloc(sizeof(ImageB));
+    if(r == NULL){
+        exit(1);
+    }
+    r->nLigne = img1->nLigne; r->nColonne= img1->nColonne;
+    r->data = et_(img1->data, img2->data, img1->nLigne, img1->nColonne, 1);
+    return r;
+}
+ImageG* ouG(ImageB* img1, ImageG* img2){
+    ImageG* r = malloc(sizeof(ImageG));
+    if(r == NULL){
+        exit(1);
+    }
+    r->nLigne = img1->nLigne; r->nColonne= img1->nColonne;
+    r->data = ou_(img1->data, img2->data, img1->nLigne, img1->nColonne,255);
+    return r;
+}
+ImageB* ouB(ImageB* img1, ImageB* img2){
+    ImageB* r = malloc(sizeof(ImageB));
+    if(r == NULL){
+        exit(1);
+    }
+    r->nLigne = img1->nLigne; r->nColonne= img1->nColonne;
+    r->data = ou_(img1->data, img2->data, img1->nLigne, img1->nColonne, 0);
+    return r;
 }

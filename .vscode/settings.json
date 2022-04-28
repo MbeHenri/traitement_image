@@ -1,11 +1,6 @@
 {
-    "C_Cpp.errorSquiggles": "Disabled",
     "files.associations": {
-        "limits": "c",
-        "*.tcc": "c",
-        "stdio.h": "c",
-        "stdlib.h": "c",
-        "base.h": "c",
-        "random": "c"
+        "algorithm": "c",
+        "image.h": "c"
     }
 }

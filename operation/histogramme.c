@@ -25,17 +25,17 @@ int main(int argc, char const *argv[])
         printf("> Image a niveau de gris \n");
         ImageG * img = read_G(f);
         fclose(f);
-        unsigned int* hist = histogram_G(img);
+        int* hist = histogram_G(img);
         free_ImageG(img);
     
         char* dest = (char*) malloc((6+strlen(argv[1]))* sizeof(char));
         dest[0]='\0';
         strcat(dest,"hist_");strcat(dest,argv[1]);strcat(dest,".txt");
         
-        
         f = fopen(dest , "w");
         if (f == NULL)
             exit(1);
+            
         int i=0;
         fprintf(f, "couleur,occurence\n");
         for ( i = 0; i < 256; i++)
