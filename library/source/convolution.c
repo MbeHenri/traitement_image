@@ -9,46 +9,66 @@ int **filtre_gausien(unsigned int pas, double ecart_type)
 {
     unsigned int n = 2 * pas + 1;
     int **result = create_matrix(n, n);
-    unsigned int u, v;
-    for (u = 0; u < n; u++)
-        for (v = 0; v < n; v++)
-            result[u][v] = exp(-(u * u + v * v) / (2 * ecart_type * ecart_type));
+    unsigned int y, x;
+    for (y = 0; y < n; y++)
+        for (x = 0; x < n; x++)
+            result[y][x] = exp(-(y * y + x * x) / (2 * ecart_type * ecart_type));
     return result;
 }
 int **filtre_moyenneur(unsigned int pas)
 {
     unsigned int n = 2 * pas + 1;
     int **result = create_matrix(n, n);
-    unsigned int u, v;
-    for (u = 0; u < n; u++)
-        for (v = 0; v < n; v++)
-            result[u][v] = 1;
+    unsigned int i, j;
+    for (i = 0; i < n; i++)
+        for (j = 0; j < n; j++)
+            result[i][j] = 1;
     return result;
 }
-Filtre *read_filtre(char *path)
+
+Filtre *read_filtre(const char *path)
 {
-    FILE *f = fopen(path, "w");
+    FILE *f = fopen(path, "r");
     if (f == NULL)
     {
         exit(1);
     }
-    Filtre* result = malloc(sizeof(Filtre));
-    fscanf(f, "%d\n", result->pas);
+
+    Filtre *result = malloc(sizeof(Filtre));
+    fscanf(f, "%d", &result->pas);
     unsigned int n = 2 * result->pas + 1;
-    result->data = create_matrix(n, n);
     unsigned int i, j;
+    result->data = create_matrix(n, n);
     for (i = 0; i < n; i++)
         for (j = 0; j < n; j++)
             fscanf(f, "%d", &result->data[i][j]);
     return result;
 }
+void free_Filtre(Filtre *filtre)
+{
+    free_matrix(filtre->data, 2 * filtre->pas + 1);
+    free(filtre);
+}
 double **norm_filtre(int **filtre, unsigned int pas)
 {
-    double **result = create_matrix_d(n, n);
     unsigned int i, j, n = 2 * pas + 1;
+    double **result = create_matrix_d(n, n);
+    int sum = 0;
+    for (i = 0; i < n; i++)
+    {
+        for (j = 0; j < n; j++)
+        {
+            sum += filtre[i][j];
+            result[i][j] = filtre[i][j];
+        }
+    }
+    if (sum == 0)
+    {
+        return result;
+    }
     for (i = 0; i < n; i++)
         for (j = 0; j < n; j++)
-            result[i][j] = filtre[i][j] / (n * n);
+            result[i][j] = result[i][j] / sum;
     return result;
 }
 
@@ -56,17 +76,18 @@ int **convoluer(int **d, unsigned int n_ligne, unsigned int n_col, double **filt
 {
     int **result = create_matrix(n_ligne, n_col);
     int n = 2 * pas;
-    int d_[n_ligne + n][n_col + n];
+    int **d_ = create_matrix(n_ligne + n, n_col + n);
     unsigned int i, j, u, v;
+
     for (i = 0; i < n_ligne + n; i++)
     {
         for (j = 0; j < n_col + n; j++)
         {
-            if (i < n || i > n_ligne)
+            if (i < pas || i >= n_ligne)
             {
                 d_[i][j] = 0;
             }
-            else if (j < n || j > n_col)
+            else if (j < pas || j >= n_col)
             {
                 d_[i][j] = 0;
             }
@@ -81,19 +102,56 @@ int **convoluer(int **d, unsigned int n_ligne, unsigned int n_col, double **filt
         for (j = pas; j < n_col + pas; j++)
         {
             result[i - pas][j - pas] = 0;
-            for (u = 0; u < 1 + n; u++)
-                for (v = 0; v < 1 + n; v++)
-                    result[i - pas][j - pas] += d_[i - pas + u][j - pas + v] * filtre[u][v];
+            for (u = 0; u <= n; u++)
+                for (v = 0; v <= n; v++)
+                    result[i - pas][j - pas] += d_[i + u - pas][j + v - pas] * filtre[u][v];
 
             if (result[i - pas][j - pas] > 255)
-            {
                 result[i - pas][j - pas] = 255;
-            }
-            else if (result[i - pas][j - pas] < 0)
-            {
+            if (result[i - pas][j - pas] < 0)
                 result[i - pas][j - pas] = 0;
+        }
+    }
+    free_matrix(d_, n_ligne + n);
+    return result;
+}
+
+int **convoluerMedian(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int pas)
+{
+    int **result = create_matrix(n_ligne, n_col);
+
+    unsigned int n = (2 * pas + 1) * (2 * pas + 1);
+    int *vect = malloc(n * sizeof(int));
+    unsigned int taille = 0;
+    unsigned int i, j;
+
+    for (i = 0; i < n_ligne; i++)
+    {
+        for (j = 0; j < n_col; j++)
+        {
+            // recherche des voisins
+            taille = 0;
+            const int ymax = i + pas, xmax = j + pas;
+            int y, x;
+            for (y = i - pas; y <= ymax; y++)
+            {
+                for (x = j - pas; x <= xmax; x++)
+                {
+                    if (x >= 0 && x < n_col && y >= 0 && y < n_ligne)
+                    {
+                        vect[taille] = d[y][x];
+                        taille++;
+                    }
+                }
+            }
+            sortTab(vect, taille);
+            result[i][j] = vect[taille / 2];
+            if (taille % 2 == 0)
+            {
+                result[i][j] = vect[taille / 2 - 1];
             }
         }
     }
+    free(vect);
     return result;
 }

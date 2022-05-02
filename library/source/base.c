@@ -3,24 +3,28 @@
 #include <math.h>
 
 #include "../entete/base.h"
-#include "../entete/Vector.h"
 
-Vector_d *echantillonage(double min, double max, double ecart)
+int indice_val_proche(double *d, int len, double val)
 {
-    unsigned int n = 0;
-    // on recherche le nombre le nombre d'ecart possible partant de la valeur minimale
-    while (min + ecart * n > max || min + ecart * (n + 1) >= max)
+    int ind = 0;
+    while (d[ind] <= val && ind < len)
     {
-        n++;
+        ind++;
     }
-    Vector_d *result = create_vector_d(n + 1);
-    unsigned int i = 0;
-    // on construit un vecteur constituant les valeurs suuccessives d'ecart
-    for (i = 0; i < (n + 1); i++)
+    ind--;
+    if (ind < 0 || (ind == len - 1 && d[ind] != val))
     {
-        result->data[i] = min + ecart * i;
+        return -1;
     }
-    return result;
+    if (d[ind] == val)
+    {
+        return ind;
+    }
+    if (2 * val - d[ind + 1] - d[ind] <= 0)
+    {
+        return ind;
+    }
+    return ind + 1;
 }
 
 int **create_matrix(unsigned int n_ligne, unsigned int n_col)
@@ -43,7 +47,7 @@ int **create_matrix(unsigned int n_ligne, unsigned int n_col)
     }
     return d;
 }
-int ** copie_matrix(int **d, unsigned int n_ligne, unsigned int n_col)
+int **copie_matrix(int **d, unsigned int n_ligne, unsigned int n_col)
 {
     int **r = create_matrix(n_ligne, n_col);
     unsigned int i, j;
@@ -214,7 +218,7 @@ int **et_(int **d1, int **d2, unsigned int n_ligne, unsigned int n_col, int a)
         for (j = 0; j < n_ligne; j++)
         {
             d[i][j] = a;
-            if( d1[i][j] == 0 )
+            if (d1[i][j] == 0)
                 d[i][j] = d2[i][j];
         }
     }
@@ -229,7 +233,7 @@ int **ou_(int **d1, int **d2, unsigned int n_ligne, unsigned int n_col, int a)
         for (j = 0; j < n_ligne; j++)
         {
             d[i][j] = a;
-            if( d1[i][j] == 1 )
+            if (d1[i][j] == 1)
                 d[i][j] = d2[i][j];
         }
     }
@@ -299,39 +303,66 @@ int **replace_line_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned 
     return r;
 }
 
-int **replace_circle_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int xr, unsigned int yr, double rayon , int val_replace)
+int **replace_circle_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int xr, unsigned int yr, double rayon, int val_replace)
 {
     int **r = create_matrix(n_ligne, n_col);
-    unsigned int x, y;
-    for ( y = 0; y < n_ligne; y++)
+    unsigned int x, y, a, b = rayon * rayon;
+    for (y = 0; y < n_ligne; y++)
     {
-        for ( x = 0; x < n_col; x++)
+        for (x = 0; x < n_col; x++)
         {
-            if (pow(x-xr,2.0) + pow(y-yr,2.0) == pow(rayon,2.0))
+            a = (x - xr) * (x - xr) + (y - yr) * (y - yr);
+            if (a == b)
             {
                 r[y][x] = val_replace;
-            }else{
+            }
+            else
+            {
                 r[y][x] = d[y][x];
             }
-        }   
+        }
     }
     return r;
 }
-int **replace_disque_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int xr, unsigned int yr, double rayon , int val_replace)
+int **replace_disque_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int xr, unsigned int yr, double rayon, int val_replace)
 {
     int **r = create_matrix(n_ligne, n_col);
-    unsigned int x, y, a, b=rayon*rayon;
-    for ( y = 0; y < n_ligne; y++)
+    unsigned int x, y, a, b = rayon * rayon;
+    for (y = 0; y < n_ligne; y++)
     {
-        for ( x = 0; x < n_col; x++)
+        for (x = 0; x < n_col; x++)
         {
-            a = (x- xr)*(x- xr) + (y-yr)*(y-yr);
-            if( a<b ){
+            a = (x - xr) * (x - xr) + (y - yr) * (y - yr);
+            if (a < b)
+            {
                 r[y][x] = val_replace;
-            }else{
+            }
+            else
+            {
                 r[y][x] = d[y][x];
             }
-        }   
+        }
+    }
+    return r;
+}
+
+int **replace_rectangle_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int xr, unsigned int yr, double longueur, double largeur, int val_replace)
+{
+    int **r = create_matrix(n_ligne, n_col);
+    unsigned int x, y;
+    for (y = 0; y < n_ligne; y++)
+    {
+        for (x = 0; x < n_col; x++)
+        {
+            if (x - xr >= 0 && x - xr <= longueur && y - yr >= 0 && y - yr <= largeur)
+            {
+                r[y][x] = val_replace;
+            }
+            else
+            {
+                r[y][x] = d[y][x];
+            }
+        }
     }
     return r;
 }
@@ -344,7 +375,7 @@ int **binarisation(int **d, unsigned int n_ligne, unsigned int n_col, double seu
     {
         for (j = 0; j < n_col; j++)
         {
-            if (d[i][j] < seuil)
+            if (d[i][j] > seuil)
             {
                 r[i][j] = 0;
             }
@@ -381,4 +412,63 @@ int **difference(int **d, unsigned int n_ligne, unsigned int n_col, int a)
         }
     }
     return r;
+}
+void sortTab(int *d, unsigned int n)
+{
+    tri_bulle_int(d, n);
+}
+// TRI FUSION
+void tri_bulle_int(int *tableau, int taille)
+{
+    int i = 0, j = 0, k = taille;
+    int aux;
+    for (i = 0; i < taille; i++)
+    {
+        for (j = 0; j < k - 1; j++)
+        {
+            if (tableau[j] > tableau[j + 1])
+            {
+                aux = tableau[j];
+                tableau[j] = tableau[j + 1];
+                tableau[j + 1] = aux;
+            }
+        }
+    }
+}
+
+int **selection_k_max(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int k)
+{
+    int **max = create_matrix(k, 2);
+    unsigned int i, j, ind,s;
+    for (i = 0; i < k; i++)
+    {
+        // indice ligne
+        max[i][0] = 0;
+        // indice colonne
+        max[i][1] = 0;
+    }
+    for (i = 0; i < n_ligne; i++)
+    {
+        for (j = 0; j < n_col; j++)
+        {
+            ind = 0;
+            while (d[i][j] <= d[ max[ind][0] ][ max[ind][1] ] && ind < k)
+            {
+                k++;
+            }
+            if (ind < k)
+            {
+                s=ind+1;
+                while (s<k)
+                {
+                    max[s][0] = max[s-1][0];
+                    max[s][1] = max[s-1][1];
+                    s++;
+                }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                max[ind][0] = i;
+                max[ind][1] = j;
+            }   
+        }
+    }
+    return max;
 }

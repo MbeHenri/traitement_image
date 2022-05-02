@@ -1,9 +1,6 @@
 #ifndef BASE_H_INCLUDED
 #define BASE_H_INCLUDED
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
 #include "Vector.h"
 
 // PROTOTYPES DES FONCTIONS DE CREATION, DE COPIE ET DE LIBERATION D'ESPACE
@@ -38,11 +35,6 @@ void free_matrix_d(double **d, unsigned int n_ligne);
 // PROTOTYPES DES FONCTIONS DE BASE POUR LE TRAITEMENT SUR IMAGE
 //--------------------------------------------------------------
 
-/* permet d'effectuer un echantillonage d'un intervalle [ min .. max ] 
-    suivant une valeur d' ecart
-*/
-Vector_d* echantillonage(double min, double max, double ecart);
-
 /* permet d'obtenir l'histogramme des valeurs d'une matrice d'entiers
 */
 int *histogram(int **d, unsigned int n_ligne, unsigned int n_col);
@@ -59,13 +51,6 @@ double contraste_ecart_type(int **d, unsigned int n_ligne, unsigned int n_col);
 */
 double contraste_min_max(int **d, unsigned int n_ligne, unsigned int n_col);
 
-/* permet d'obtenir le maximum d'une matrice d'entiers 
-*/
-int max_(int **d, unsigned int n_ligne, unsigned int n_col);
-
-/* permet d'obtenir le minimum d'une matrice d'entiers 
-*/
-int min_(int **d, unsigned int n_ligne, unsigned int n_col);
 
 /* permet d'obtenir le resultat de la somme de deux matrices d'entiers 
 */
@@ -87,14 +72,43 @@ int **et_(int **d1, int **d2, unsigned int n_ligne, unsigned int n_col, int a);
 */
 int **ou_(int **d1, int **d2, unsigned int n_ligne, unsigned int n_col, int a);
 
+/* permet d'obtenir le profil d'intensite d'un segment [(x1,y1) (x2,y2)]
+*/
+Vector *profil_intensite_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2);
+
+/* permet d'obtenir d'une matrice d'entiers et d'un seuil dans ]0, 255[ 
+une matrice de valeurs {0, 1} tel que si on a la valeur d'un entier est inferieur a 
+'seuil' alors ona 1, et 0 sinon
+*/
+int ** binarisation(int** d, unsigned int n_ligne, unsigned int n_col, double seuil);
+
+
+
+// PROTOTYPES DES FONCTIONS DE BASE 
+//---------------------------------
+
+/* permet d'obtenir un vecteur crier de part un vecteur de depart
+*/
+void sortTab(int * d, unsigned int n);
+void tri_bulle_int(int* tableau,int taille);
+
+/* permet d'obtenir le maximum d'une matrice d'entiers 
+*/
+int max_(int **d, unsigned int n_ligne, unsigned int n_col);
+
+/* permet d'obtenir le minimum d'une matrice d'entiers 
+*/
+int min_(int **d, unsigned int n_ligne, unsigned int n_col);
+
+
+/* permet d'obtenir l'indice de la valeur la plus proche a 'val' dans le tableau d
+*/
+int indice_val_proche(double* d,int len, double val);
+
 /* permet d'obtenir le resultat de la difference d'une matrice a une autre, la premiere 
 rempli de a
 */
 int ** difference(int** d, unsigned int n_ligne, unsigned int n_col, int a);
-
-/* permet d'obtenir le profil d'intensite d'un segment [(x1,y1) (x2,y2)]
-*/
-Vector *profil_intensite_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2);
 
 /* permet de remplacer par 'val_replace' les valeurs du segment [(x1,y1) (x2,y2)]
 */
@@ -108,15 +122,15 @@ int **replace_circle_(int **d, unsigned int n_ligne, unsigned int n_col, unsigne
 */
 int **replace_disque_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int xr, unsigned int yr, double rayon , int val_replace);
 
-/* permet d'obtenir d'une matrice d'entiers et d'un seuil dans ]0, 255[ 
-une matrice de valeurs {0, 1} tel que si on a la valeur d'un entier est inferieur a 
-'seuil' alors ona 1, et 0 sinon
+/* permet de remplacer par 'val_replace' les valeurs du rectangle ((xr,yr), longueur, largeur)
 */
-int ** binarisation(int** d, unsigned int n_ligne, unsigned int n_col, double seuil);
+int **replace_rectangle_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int xr, unsigned int yr, double longueur, double largueur, int val_replace);
 
 /* permet de chenger l'intervalle de valeur de cellulle comprise dans l'intervalle [ a1.. a2] vers [min .. max]
-ces intervalles etant inclus dans l'intervalle [ 0..255]
+ces intervalles etant inclus dans l'intervalle [ 0..255] eventuellement
 */
 int ** changer_plage(int** d, unsigned int n_ligne, unsigned int n_col,  int a1,  int a2,  int min,  int max);
 
+
+int ** selection_k_max(int** d, unsigned int n_ligne, unsigned int n_col, unsigned int k);
 #endif // BASE_H_INCLUDED

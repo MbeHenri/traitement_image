@@ -23,14 +23,14 @@ int main(int argc, char const *argv[])
         printf("> Image a niveau de gris \n");
         ImageG * img = read_G(f);
         fclose(f);
-        int max = max_G(img), min = min_G(img);
-        double seuil = (max - min)/2;
+        
+        double seuil = atof(argv[2]);
         ImageB* r = binarisationG(img, seuil);
         
         free_ImageG(img);
         
         // on contruit l'image destination
-        char* dest = (char*) malloc((1+strlen(argv[1]))* sizeof(char));
+        char* dest = (char*) malloc((5+strlen(argv[1]))* sizeof(char));
         dest[0]='\0';
         strcat(dest,argv[1]);
         strcat(dest,".pbm");

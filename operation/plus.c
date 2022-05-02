@@ -57,7 +57,7 @@ int main(int argc, char const *argv[])
             dest = (char *)malloc((1 + strlen(argv[3])) * sizeof(char));
             dest[0] = '\0';
             strcat(dest, argv[3]);
-            strcat(dest, ".pbm");
+            strcat(dest, ".pgm");
         }
         write_G(img, dest);
         free_ImageG(img);

@@ -1,6 +1,5 @@
 {
     "files.associations": {
-        "algorithm": "c",
-        "image.h": "c"
+        "change_domain.h": "c"
     }
 }

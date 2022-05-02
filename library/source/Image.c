@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
 
 #include "../entete/Image.h"
 #include "../entete/base.h"
+#include "../entete/change_domain.h"
 
 void free_ImageG(ImageG* img){
     free_matrix(img->data, img->nLigne);
@@ -23,10 +23,11 @@ ImageG * read_G(FILE * f){
     {
         while (getc(f)!='\n');
     }
+    int max;  
     fseek(f, -1, SEEK_CUR);
-    
     fscanf(f, "%d %d", &img->nColonne, &img->nLigne);
     img->data = create_matrix(img->nLigne, img->nColonne);
+    fscanf(f, "%d", &max);
     unsigned int i,j;
     for (i = 0; i < img->nLigne; i++)
         for (j = 0; j < img->nColonne; j++)
@@ -75,6 +76,7 @@ void write_G(ImageG* img, const char * path){
     fprintf(f,"P2\n");
     fprintf(f,"# realisation de Mbe\n");
     fprintf(f,"%d %d\n", img->nColonne, img->nLigne);
+    fprintf(f,"%d\n", 255);
     unsigned int i,j;
     for ( i = 0; i < img->nLigne; i++){
         for ( j = 0; j < img->nColonne; j++){
@@ -202,6 +204,17 @@ ImageG * drawDisqueG(ImageG* img, unsigned int xr, unsigned int yr, double rayon
     return r;
 }
 
+ImageG * drawRectangleG(ImageG* img, unsigned int xr, unsigned int yr, double longueur, double largeur, int val_replace){
+    ImageG * r = (ImageG *) malloc(sizeof(ImageG));
+    if ( r == NULL){
+        printf("[ il est impossible d'allouer de la memoire pour l'image resultante ]\n");
+        exit(1);
+    }
+    r->nLigne = img->nLigne; r->nColonne= img->nColonne;
+    r->data = replace_rectangle_(img->data,img->nLigne, img->nColonne, xr, yr, longueur, largeur, val_replace);
+    return r;
+}
+
 ImageB* binarisationG(ImageG* img, double seuil){
     ImageB* r = malloc(sizeof(ImageB));
     if(r == NULL){
@@ -266,4 +279,45 @@ ImageB* ouB(ImageB* img1, ImageB* img2){
     r->nLigne = img1->nLigne; r->nColonne= img1->nColonne;
     r->data = ou_(img1->data, img2->data, img1->nLigne, img1->nColonne, 0);
     return r;
+}
+ImageG* convolutionG(ImageG* img,Filtre* filtre){
+    ImageG* r = malloc(sizeof(ImageG));
+    if(r == NULL){
+        exit(1);
+    }
+    r->nLigne = img->nLigne; r->nColonne= img->nColonne;
+    double** dFiltre = norm_filtre(filtre->data, filtre->pas);
+    
+    
+    r->data = convoluer(img->data, img->nLigne, img->nColonne, dFiltre, filtre->pas);
+    free_matrix_d(dFiltre, 2*filtre->pas+1);
+    return r;
+}
+ImageG* convolutionMedianG(ImageG* img, unsigned int pas){
+    ImageG* r = malloc(sizeof(ImageG));
+    if(r == NULL){
+        exit(1);
+    }
+    r->nLigne = img->nLigne; r->nColonne= img->nColonne;
+    r->data = convoluerMedian(img->data, img->nLigne, img->nColonne,pas);
+    return r;
+}
+
+int** transform_hough_occur(ImageB* img,Vector_d* beta, Vector_d* theta, int color){
+    return transformer_hough(img->data, img->nLigne, img->nColonne, beta->data, beta->n, theta->data, theta->n, color);
+}
+ImageG *convert_matrixG(int **d, unsigned int n_ligne, unsigned int n_col){
+    ImageG* r = malloc(sizeof(ImageG));
+    if(r == NULL){
+        exit(1);
+    }
+    r->nLigne = n_ligne; r->nColonne= n_col;
+    r->data = changer_plage(d, n_ligne, n_col,min_(d, n_ligne, n_col), max_(d, n_ligne, n_col), 0, 255);
+    return r;
+}
+int ** matrix_spectre_fourier_reelle(ImageG* img){
+    return transform_fourier_reelle(img->data, img->nLigne, img->nColonne);
+}
+int ** matrix_spectre_fourier_imaginaire(ImageG* img){
+    return transform_fourier_imaginaire(img->data, img->nLigne, img->nColonne);
 }

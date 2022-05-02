@@ -41,4 +41,12 @@ Vector_d* create_vector_d(unsigned int len);
 */
 void free_vector_d(Vector_d * v);
 
+
+// PROTOTYPES DES FONCTIONS DE VECTEUR UNIQUEMENT
+//----------------------------------------------------------------
+/* permet d'effectuer un echantillonage d'un intervalle [ min .. max ] 
+    suivant une valeur d' ecart
+*/
+Vector_d* echantillonage(double min, double max, double ecart);
+
 #endif
