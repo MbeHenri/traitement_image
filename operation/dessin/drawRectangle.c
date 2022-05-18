@@ -26,35 +26,37 @@ int main(int argc, char const *argv[])
         printf(">image a niveau de gris \n");
         ImageG *img = read_G(f);
         fclose(f);
-        
-        unsigned int xr = atoi(argv[2]), yr = atoi(argv[3]);
+
+        int xr = atoi(argv[2]), yr = atoi(argv[3]);
         double largeur = atof(argv[5]);
         double longueur = atof(argv[4]);
-        if( xr >= img->nColonne || yr >= img->nLigne ){
+        if (xr >= img->nColonne || yr >= img->nLigne)
+        {
             free_ImageG(img);
             printf("[ un des points ne se trouve pas dans l'image (les coordonnees ne correspondent pas) ]\n");
             exit(1);
         }
-        
-        int val_replace  = 0;
-        if(argv[6]!=NULL){
+
+        int val_replace = 0;
+        if (argv[6] != NULL)
+        {
             val_replace = atoi(argv[6]);
             if (val_replace > 255)
             {
                 val_replace = 255;
             }
         }
-        
+
         /* TRACER DU RECTANGLE
-        */
-        char * r_dest = (char *)malloc((15 + strlen(argv[1])) * sizeof(char));
+         */
+        char *r_dest = (char *)malloc((15 + strlen(argv[1])) * sizeof(char));
         r_dest[0] = '\0';
         strcat(r_dest, argv[1]);
         strcat(r_dest, "_rectangle.pgm");
-        
-        ImageG *r = drawRectangleG(img, xr,yr, longueur, largeur, val_replace);      
+
+        ImageG *r = drawRectangleG(img, xr, yr, longueur, largeur, val_replace);
         write_G(r, r_dest);
-        
+
         free_ImageG(img);
         free_ImageG(r);
     }

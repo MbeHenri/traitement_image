@@ -5,21 +5,21 @@
 #include "../entete/base.h"
 #include "../entete/convolution.h"
 
-int **filtre_gausien(unsigned int pas, double ecart_type)
+int **filtre_gausien(int pas, double ecart_type)
 {
-    unsigned int n = 2 * pas + 1;
+    int n = 2 * pas + 1;
     int **result = create_matrix(n, n);
-    unsigned int y, x;
+    int y, x;
     for (y = 0; y < n; y++)
         for (x = 0; x < n; x++)
             result[y][x] = exp(-(y * y + x * x) / (2 * ecart_type * ecart_type));
     return result;
 }
-int **filtre_moyenneur(unsigned int pas)
+int **filtre_moyenneur(int pas)
 {
-    unsigned int n = 2 * pas + 1;
+    int n = 2 * pas + 1;
     int **result = create_matrix(n, n);
-    unsigned int i, j;
+    int i, j;
     for (i = 0; i < n; i++)
         for (j = 0; j < n; j++)
             result[i][j] = 1;
@@ -36,8 +36,8 @@ Filtre *read_filtre(const char *path)
 
     Filtre *result = malloc(sizeof(Filtre));
     fscanf(f, "%d", &result->pas);
-    unsigned int n = 2 * result->pas + 1;
-    unsigned int i, j;
+    int n = 2 * result->pas + 1;
+    int i, j;
     result->data = create_matrix(n, n);
     for (i = 0; i < n; i++)
         for (j = 0; j < n; j++)
@@ -49,9 +49,9 @@ void free_Filtre(Filtre *filtre)
     free_matrix(filtre->data, 2 * filtre->pas + 1);
     free(filtre);
 }
-double **norm_filtre(int **filtre, unsigned int pas)
+double **norm_filtre(int **filtre, int pas)
 {
-    unsigned int i, j, n = 2 * pas + 1;
+    int i, j, n = 2 * pas + 1;
     double **result = create_matrix_d(n, n);
     int sum = 0;
     for (i = 0; i < n; i++)
@@ -72,12 +72,12 @@ double **norm_filtre(int **filtre, unsigned int pas)
     return result;
 }
 
-int **convoluer(int **d, unsigned int n_ligne, unsigned int n_col, double **filtre, unsigned int pas)
+int **convoluer(int **d, int n_ligne, int n_col, double **filtre, int pas)
 {
     int **result = create_matrix(n_ligne, n_col);
     int n = 2 * pas;
     int **d_ = create_matrix(n_ligne + n, n_col + n);
-    unsigned int i, j, u, v;
+    int i, j, u, v;
 
     for (i = 0; i < n_ligne + n; i++)
     {
@@ -116,14 +116,14 @@ int **convoluer(int **d, unsigned int n_ligne, unsigned int n_col, double **filt
     return result;
 }
 
-int **convoluerMedian(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int pas)
+int **convoluerMedian(int **d, int n_ligne, int n_col, int pas)
 {
     int **result = create_matrix(n_ligne, n_col);
 
-    unsigned int n = (2 * pas + 1) * (2 * pas + 1);
+    int n = (2 * pas + 1) * (2 * pas + 1);
     int *vect = malloc(n * sizeof(int));
-    unsigned int taille = 0;
-    unsigned int i, j;
+    int taille = 0;
+    int i, j;
 
     for (i = 0; i < n_ligne; i++)
     {

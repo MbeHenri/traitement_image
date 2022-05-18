@@ -12,45 +12,42 @@ int main(int argc, char const *argv[])
         printf("[ il n'est pas possible d'ouvrir le fichier ]\n");
         exit(1);
     }
-
     char ch[5];
     fscanf(f, "%s\n", ch);
 
     if (strcmp(ch, "P1") == 0)
     {
-        printf("> image binaire \n");
-        printf("[ rien a faire ]\n");
+        printf("> Image binaire \n");
+
         fclose(f);
     }
     else if (strcmp(ch, "P2") == 0)
     {
-        printf(">image a niveau de gris \n");
+        printf("> Image a niveau de gris \n");
         ImageG *img = read_G(f);
         fclose(f);
-        int pas = 0;
-        pas = atoi(argv[2]);
-        if (pas == 0)
-        {
-            free_ImageG(img);
-            printf("[ le pas n'as pas ete donne ]\n");
-            exit(1);
-        }
-        
-        ImageG *r = convolutionMedianG(img, pas);
-        char * r_dest = (char *)malloc((10 + strlen(argv[1])) * sizeof(char));
-        r_dest[0] = '\0';
-        strcat(r_dest, argv[1]);
-        strcat(r_dest, "_convM.pgm");
-        
-        write_G(r, r_dest);
+
+        int x = atoi(argv[2]);
+        int y = atoi(argv[3]);
+        double e = atof(argv[4]);
+
+        printf("0/100\n");
+        ImageG *r = germeG(img, x, y, e);
+        printf("100/100\n");
+
+        char *dest = (char *)malloc((12 + strlen(argv[1])) * sizeof(char));
+        dest[0] = '\0';
+        strcat(dest, argv[1]);
+        strcat(dest, "_germe.pgm");
+
+        write_G(r, dest);
         free_ImageG(r);
         free_ImageG(img);
-        
     }
     else if (strcmp(ch, "P3") == 0)
     {
-        printf("> premiere image: image a couleur \n");
-        printf("[ rien a faire ]\n");
+        printf("> Image a couleur \n");
+
         fclose(f);
     }
     else

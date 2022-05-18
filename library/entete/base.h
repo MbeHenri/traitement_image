@@ -9,128 +9,122 @@
 /* permet de creer de l'espace memoire pour une matrice d'entiers a 'n_ligne'
 de lignes et a 'n_col' de colonnes
 */
-int **create_matrix(unsigned int n_ligne, unsigned int n_col);
+int **create_matrix(int n_ligne, int n_col);
 
 /* permet de copier une matrice d'entiers a 'n_ligne'
 de lignes et a 'n_col' de colonnes
 */
-int **copie_matrix(int** d, unsigned int n_ligne, unsigned int n_col);
+int **copie_matrix(int **d, int n_ligne, int n_col);
 
 /* permet de creer de l'espace memoire pour une matrice de reels a 'n_ligne'
 de lignes et a 'n_col' de colonnes
 */
-double **create_matrix_d(unsigned int n_ligne, unsigned int n_col);
+double **create_matrix_d(int n_ligne, int n_col);
 
 /* permet de liberer de l'espace memoire pour une matrice d'entiers a 'n_ligne'
 de lignes et a 'n_col' de colonnes
 */
-void free_matrix(int **d, unsigned int n_ligne);
+void free_matrix(int **d, int n_ligne);
 
 /* permet de liberer de l'espace memoire pour une matrice de reels a 'n_ligne'
 de lignes et a 'n_col' de colonnes
 */
-void free_matrix_d(double **d, unsigned int n_ligne);
-
+void free_matrix_d(double **d, int n_ligne);
 
 // PROTOTYPES DES FONCTIONS DE BASE POUR LE TRAITEMENT SUR IMAGE
 //--------------------------------------------------------------
 
 /* permet d'obtenir l'histogramme des valeurs d'une matrice d'entiers
-*/
-int *histogram(int **d, unsigned int n_ligne, unsigned int n_col);
+ */
+int *histogram(int **d, int n_ligne, int n_col);
 
-/* permet d'obtenir la luminance (moyennne) d'une matrice d'entiers 
-*/
-double luminance(int **d, unsigned int n_ligne, unsigned int n_col);
+/* permet d'obtenir la luminance (moyennne) d'une matrice d'entiers
+ */
+double luminance(int **d, int n_ligne, int n_col);
 
-/* permet d'obtenir l'ecert typo (moyennne) d'une matrice d'entiers 
-*/
-double contraste_ecart_type(int **d, unsigned int n_ligne, unsigned int n_col);
+/* permet d'obtenir l'ecert typo (moyennne) d'une matrice d'entiers
+ */
+double contraste_ecart_type(int **d, int n_ligne, int n_col);
 
-/* permet d'obtenir le contraste min max d'une matrice d'entiers 
-*/
-double contraste_min_max(int **d, unsigned int n_ligne, unsigned int n_col);
+/* permet d'obtenir le contraste min max d'une matrice d'entiers
+ */
+double contraste_min_max(int **d, int n_ligne, int n_col);
 
+/* permet d'obtenir le resultat de la somme de deux matrices d'entiers
+ */
+int **plus_(int **d1, int **d2, int n_ligne, int n_col);
 
-/* permet d'obtenir le resultat de la somme de deux matrices d'entiers 
-*/
-int **plus_(int **d1, int **d2, unsigned int n_ligne, unsigned int n_col);
+/* permet d'obtenir le resultat du produit d'une matrice d'entiers avec unn ratio [ 0..1 ]
+ */
+int **fois_(int **d_, int n_ligne, int n_col1, double ratio);
 
-/* permet d'obtenir le resultat du produit d'une matrice d'entiers avec unn ratio [ 0..1 ] 
-*/
-int **fois_(int ** d_, unsigned int n_ligne, unsigned int n_col1, double ratio);
+/* permet d'obtenir le resultat de la soustraction de deux matrices d'entiers
+ */
+int **moins_(int **d1, int **d2, int n_ligne, int n_col);
 
-/* permet d'obtenir le resultat de la soustraction de deux matrices d'entiers 
-*/
-int **moins_(int **d1, int **d2, unsigned int n_ligne, unsigned int n_col);
+/* permet d'obtenir le resultat du 'et' logique d'une matrice de noir = 1 et de blanc = 0 et de n'importe quelle matrice d'entiers
+ */
+int **et_(int **d1, int **d2, int n_ligne, int n_col, int a);
 
-/* permet d'obtenir le resultat du 'et' logique d'une matrice de noir = 1 et de blanc = 0 et de n'importe quelle matrice d'entiers  
-*/
-int **et_(int **d1, int **d2, unsigned int n_ligne, unsigned int n_col, int a);
-
-/* permet d'obtenir le resultat du 'ou' logique d'une matrice de noir = 1 et de blanc = 0 et de n'importe quelle matrice d'entiers  
-*/
-int **ou_(int **d1, int **d2, unsigned int n_ligne, unsigned int n_col, int a);
+/* permet d'obtenir le resultat du 'ou' logique d'une matrice de noir = 1 et de blanc = 0 et de n'importe quelle matrice d'entiers
+ */
+int **ou_(int **d1, int **d2, int n_ligne, int n_col, int a);
 
 /* permet d'obtenir le profil d'intensite d'un segment [(x1,y1) (x2,y2)]
-*/
-Vector *profil_intensite_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2);
+ */
+Vector *profil_intensite_(int **d, int x1, int y1, int x2, int y2);
 
-/* permet d'obtenir d'une matrice d'entiers et d'un seuil dans ]0, 255[ 
-une matrice de valeurs {0, 1} tel que si on a la valeur d'un entier est inferieur a 
+/* permet d'obtenir d'une matrice d'entiers et d'un seuil dans ]0, 255[
+une matrice de valeurs {0, 1} tel que si on a la valeur d'un entier est inferieur a
 'seuil' alors ona 1, et 0 sinon
 */
-int ** binarisation(int** d, unsigned int n_ligne, unsigned int n_col, double seuil);
+int **binarisation(int **d, int n_ligne, int n_col, double seuil);
 
-
-
-// PROTOTYPES DES FONCTIONS DE BASE 
+// PROTOTYPES DES FONCTIONS DE BASE
 //---------------------------------
 
 /* permet d'obtenir un vecteur crier de part un vecteur de depart
-*/
-void sortTab(int * d, unsigned int n);
-void tri_bulle_int(int* tableau,int taille);
+ */
+void sortTab(int *d, int n);
+void tri_bulle_int(int *tableau, int taille);
 
-/* permet d'obtenir le maximum d'une matrice d'entiers 
-*/
-int max_(int **d, unsigned int n_ligne, unsigned int n_col);
+/* permet d'obtenir le maximum d'une matrice d'entiers
+ */
+int max_(int **d, int n_ligne, int n_col);
 
-/* permet d'obtenir le minimum d'une matrice d'entiers 
-*/
-int min_(int **d, unsigned int n_ligne, unsigned int n_col);
-
+/* permet d'obtenir le minimum d'une matrice d'entiers
+ */
+int min_(int **d, int n_ligne, int n_col);
 
 /* permet d'obtenir l'indice de la valeur la plus proche a 'val' dans le tableau d
-*/
-int indice_val_proche(double* d,int len, double val);
+ */
+int indice_val_proche(double *d, int len, double val);
 
-/* permet d'obtenir le resultat de la difference d'une matrice a une autre, la premiere 
+/* permet d'obtenir le resultat de la difference d'une matrice a une autre, la premiere
 rempli de a
 */
-int ** difference(int** d, unsigned int n_ligne, unsigned int n_col, int a);
+int **difference(int **d, int n_ligne, int n_col, int a);
 
 /* permet de remplacer par 'val_replace' les valeurs du segment [(x1,y1) (x2,y2)]
-*/
-int ** replace_line_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, int val_replace);
+ */
+int **replace_line_(int **d, int n_ligne, int n_col, int x1, int y1, int x2, int y2, int val_replace);
 
 /* permet de remplacer par 'val_replace' les valeurs du disque ((xr,yr), rayon)
-*/
-int **replace_circle_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int xr, unsigned int yr, double rayon , int val_replace);
+ */
+int **replace_circle_(int **d, int n_ligne, int n_col, int xr, int yr, double rayon, int val_replace);
 
 /* permet de remplacer par 'val_replace' les valeurs du disque ((xr,yr), rayon)
-*/
-int **replace_disque_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int xr, unsigned int yr, double rayon , int val_replace);
+ */
+int **replace_disque_(int **d, int n_ligne, int n_col, int xr, int yr, double rayon, int val_replace);
 
 /* permet de remplacer par 'val_replace' les valeurs du rectangle ((xr,yr), longueur, largeur)
-*/
-int **replace_rectangle_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int xr, unsigned int yr, double longueur, double largueur, int val_replace);
+ */
+int **replace_rectangle_(int **d, int n_ligne, int n_col, int xr, int yr, double longueur, double largueur, int val_replace);
 
-/* permet de chenger l'intervalle de valeur de cellulle comprise dans l'intervalle [ a1.. a2] vers [min .. max]
+/* permet de changer lineairement l'intervalle de valeur des cellules comprises dans l'intervalle [ a1.. a2] vers [min .. max]
 ces intervalles etant inclus dans l'intervalle [ 0..255] eventuellement
 */
-int ** changer_plage(int** d, unsigned int n_ligne, unsigned int n_col,  int a1,  int a2,  int min,  int max);
+int **changer_plage(int **d, int n_ligne, int n_col, int a1, int a2, int min, int max);
 
-
-int ** selection_k_max(int** d, unsigned int n_ligne, unsigned int n_col, unsigned int k);
+int **selection_k_max(int **d, int n_ligne, int n_col, int k);
 #endif // BASE_H_INCLUDED

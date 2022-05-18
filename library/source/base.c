@@ -27,7 +27,7 @@ int indice_val_proche(double *d, int len, double val)
     return ind + 1;
 }
 
-int **create_matrix(unsigned int n_ligne, unsigned int n_col)
+int **create_matrix(int n_ligne, int n_col)
 {
     int **d = (int **)malloc(n_ligne * sizeof(int *));
     if (d == NULL)
@@ -35,7 +35,7 @@ int **create_matrix(unsigned int n_ligne, unsigned int n_col)
         printf("[ il est impossible d'allouer de la memoire pour les valeurs de pixels ]\n");
         exit(1);
     }
-    int i = 0, j = 0;
+    int i = 00;
     for (i = 0; i < n_ligne; i++)
     {
         d[i] = (int *)malloc(n_col * sizeof(int));
@@ -47,10 +47,10 @@ int **create_matrix(unsigned int n_ligne, unsigned int n_col)
     }
     return d;
 }
-int **copie_matrix(int **d, unsigned int n_ligne, unsigned int n_col)
+int **copie_matrix(int **d, int n_ligne, int n_col)
 {
     int **r = create_matrix(n_ligne, n_col);
-    unsigned int i, j;
+    int i, j;
     for (i = 0; i < n_ligne; i++)
     {
         for (j = 0; j < n_col; j++)
@@ -60,7 +60,7 @@ int **copie_matrix(int **d, unsigned int n_ligne, unsigned int n_col)
     }
     return r;
 }
-double **create_matrix_d(unsigned int n_ligne, unsigned int n_col)
+double **create_matrix_d(int n_ligne, int n_col)
 {
     double **d = (double **)malloc(n_ligne * sizeof(double *));
     if (d == NULL)
@@ -68,7 +68,7 @@ double **create_matrix_d(unsigned int n_ligne, unsigned int n_col)
         printf("[ il est impossible d'allouer de la memoire pour les valeurs de pixels ]\n");
         exit(1);
     }
-    int i = 0, j = 0;
+    int i = 0;
     for (i = 0; i < n_ligne; i++)
     {
         d[i] = (double *)malloc(n_col * sizeof(double));
@@ -80,22 +80,22 @@ double **create_matrix_d(unsigned int n_ligne, unsigned int n_col)
     }
     return d;
 }
-void free_matrix(int **d, unsigned int n_ligne)
+void free_matrix(int **d, int n_ligne)
 {
     int i = 0;
     for (i = 0; i < n_ligne; i++)
         free(d[i]);
     free(d);
 }
-void free_matrix_d(double **d, unsigned int n_ligne)
+void free_matrix_d(double **d, int n_ligne)
 {
-    unsigned int i = 0;
+    int i = 0;
     for (i = 0; i < n_ligne; i++)
         free(d[i]);
     free(d);
 }
 
-int *histogram(int **d, unsigned int n_ligne, unsigned int n_col)
+int *histogram(int **d, int n_ligne, int n_col)
 {
     int *hist = (int *)malloc(255 * sizeof(int));
     if (hist == NULL)
@@ -103,7 +103,7 @@ int *histogram(int **d, unsigned int n_ligne, unsigned int n_col)
         printf("[ impossible d'allouer de la memoire pour l'histogramme ]\n");
         exit(1);
     }
-    unsigned int i = 0, j = 0;
+    int i = 0, j = 0;
     for (i = 0; i < 256; i++)
         hist[i] = 0;
 
@@ -114,10 +114,10 @@ int *histogram(int **d, unsigned int n_ligne, unsigned int n_col)
     return hist;
 }
 
-double luminance(int **d, unsigned int n_ligne, unsigned int n_col)
+double luminance(int **d, int n_ligne, int n_col)
 {
     int sum = 0;
-    unsigned int i = 0, j = 0;
+    int i = 0, j = 0;
     for (i = 0; i < n_ligne; i++)
         for (j = 0; j < n_col; j++)
             sum += d[i][j];
@@ -125,27 +125,29 @@ double luminance(int **d, unsigned int n_ligne, unsigned int n_col)
     return sum / (n_col * n_ligne);
 }
 
-int max_(int **d, unsigned int n_ligne, unsigned int n_col)
+int max_(int **d, int n_ligne, int n_col)
 {
-    int m = 0, i = 0, j = 0;
+    int m = 0;
+    int i = 0, j = 0;
     for (i = 0; i < n_ligne; i++)
         for (j = 0; j < n_col; j++)
             if (d[i][j] > m)
                 m = d[i][j];
     return m;
 }
-int min_(int **d, unsigned int n_ligne, unsigned int n_col)
+int min_(int **d, int n_ligne, int n_col)
 {
-    int m = 255, i = 0, j = 0;
+    int m = 255;
+    int i = 0, j = 0;
     for (i = 0; i < n_ligne; i++)
         for (j = 0; j < n_col; j++)
             if (d[i][j] < m)
                 m = d[i][j];
     return m;
 }
-double contraste_ecart_type(int **d, unsigned int n_ligne, unsigned int n_col)
+double contraste_ecart_type(int **d, int n_ligne, int n_col)
 {
-    unsigned int i = 0, j = 0;
+    int i = 0, j = 0;
     double moy = luminance(d, n_ligne, n_col);
     double result = 0;
     for (i = 0; i < n_ligne; i++)
@@ -154,13 +156,14 @@ double contraste_ecart_type(int **d, unsigned int n_ligne, unsigned int n_col)
 
     return sqrt(result / (n_col * n_ligne));
 }
-double contraste_min_max(int **d, unsigned int n_ligne, unsigned int n_col)
+
+double contraste_min_max(int **d, int n_ligne, int n_col)
 {
     int min = min_(d, n_ligne, n_col), max = max_(d, n_ligne, n_col);
     return ((double)(max - min)) / (max + min);
 }
 
-int **plus_(int **d1, int **d2, unsigned int n_ligne, unsigned int n_col)
+int **plus_(int **d1, int **d2, int n_ligne, int n_col)
 {
     int **d = create_matrix(n_ligne, n_col);
     int i, j;
@@ -176,7 +179,7 @@ int **plus_(int **d1, int **d2, unsigned int n_ligne, unsigned int n_col)
     return d;
 }
 
-int **fois_(int **d_, unsigned int n_ligne, unsigned int n_col, double ratio)
+int **fois_(int **d_, int n_ligne, int n_col, double ratio)
 {
     int **d = create_matrix(n_ligne, n_col);
     int i, j;
@@ -194,7 +197,7 @@ int **fois_(int **d_, unsigned int n_ligne, unsigned int n_col, double ratio)
     return d;
 }
 
-int **moins_(int **d1, int **d2, unsigned int n_ligne, unsigned int n_col)
+int **moins_(int **d1, int **d2, int n_ligne, int n_col)
 {
     int **d = create_matrix(n_ligne, n_col);
     int i = 0, j = 0;
@@ -209,7 +212,7 @@ int **moins_(int **d1, int **d2, unsigned int n_ligne, unsigned int n_col)
     }
     return d;
 }
-int **et_(int **d1, int **d2, unsigned int n_ligne, unsigned int n_col, int a)
+int **et_(int **d1, int **d2, int n_ligne, int n_col, int a)
 {
     int **d = create_matrix(n_ligne, n_col);
     int i = 0, j = 0;
@@ -224,7 +227,7 @@ int **et_(int **d1, int **d2, unsigned int n_ligne, unsigned int n_col, int a)
     }
     return d;
 }
-int **ou_(int **d1, int **d2, unsigned int n_ligne, unsigned int n_col, int a)
+int **ou_(int **d1, int **d2, int n_ligne, int n_col, int a)
 {
     int **d = create_matrix(n_ligne, n_col);
     int i = 0, j = 0;
@@ -240,9 +243,9 @@ int **ou_(int **d1, int **d2, unsigned int n_ligne, unsigned int n_col, int a)
     return d;
 }
 
-Vector *profil_intensite_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2)
+Vector *profil_intensite_(int **d, int x1, int y1, int x2, int y2)
 {
-    unsigned int x, y, v, max = 0, min = 0;
+    int x, y, max = 0, min = 0;
     Vector *result = NULL;
     if (x1 == x2)
     {
@@ -272,10 +275,10 @@ Vector *profil_intensite_(int **d, unsigned int n_ligne, unsigned int n_col, uns
     }
     return result;
 }
-int **replace_line_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, int val_replace)
+int **replace_line_(int **d, int n_ligne, int n_col, int x1, int y1, int x2, int y2, int val_replace)
 {
     int **r = copie_matrix(d, n_ligne, n_col);
-    unsigned int x, y, v, max = 0, min = 0;
+    int x, y, max = 0, min = 0;
     if (x1 == x2)
     {
         max = y1;
@@ -303,10 +306,10 @@ int **replace_line_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned 
     return r;
 }
 
-int **replace_circle_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int xr, unsigned int yr, double rayon, int val_replace)
+int **replace_circle_(int **d, int n_ligne, int n_col, int xr, int yr, double rayon, int val_replace)
 {
     int **r = create_matrix(n_ligne, n_col);
-    unsigned int x, y, a, b = rayon * rayon;
+    int x, y, a, b = rayon * rayon;
     for (y = 0; y < n_ligne; y++)
     {
         for (x = 0; x < n_col; x++)
@@ -324,10 +327,10 @@ int **replace_circle_(int **d, unsigned int n_ligne, unsigned int n_col, unsigne
     }
     return r;
 }
-int **replace_disque_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int xr, unsigned int yr, double rayon, int val_replace)
+int **replace_disque_(int **d, int n_ligne, int n_col, int xr, int yr, double rayon, int val_replace)
 {
     int **r = create_matrix(n_ligne, n_col);
-    unsigned int x, y, a, b = rayon * rayon;
+    int x, y, a, b = rayon * rayon;
     for (y = 0; y < n_ligne; y++)
     {
         for (x = 0; x < n_col; x++)
@@ -346,15 +349,16 @@ int **replace_disque_(int **d, unsigned int n_ligne, unsigned int n_col, unsigne
     return r;
 }
 
-int **replace_rectangle_(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int xr, unsigned int yr, double longueur, double largeur, int val_replace)
+int **replace_rectangle_(int **d, int n_ligne, int n_col, int xr, int yr, double longueur, double largeur, int val_replace)
 {
     int **r = create_matrix(n_ligne, n_col);
-    unsigned int x, y;
+    int x, y;
     for (y = 0; y < n_ligne; y++)
     {
         for (x = 0; x < n_col; x++)
         {
-            if (x - xr >= 0 && x - xr <= longueur && y - yr >= 0 && y - yr <= largeur)
+            int x_ = x - xr, y_ = y - yr;
+            if (x_ >= 0 && x_ <= longueur && y_ >= 0 && y_ <= largeur)
             {
                 r[y][x] = val_replace;
             }
@@ -367,10 +371,10 @@ int **replace_rectangle_(int **d, unsigned int n_ligne, unsigned int n_col, unsi
     return r;
 }
 
-int **binarisation(int **d, unsigned int n_ligne, unsigned int n_col, double seuil)
+int **binarisation(int **d, int n_ligne, int n_col, double seuil)
 {
     int **r = create_matrix(n_ligne, n_col);
-    unsigned int i, j;
+    int i, j;
     for (i = 0; i < n_ligne; i++)
     {
         for (j = 0; j < n_col; j++)
@@ -388,22 +392,32 @@ int **binarisation(int **d, unsigned int n_ligne, unsigned int n_col, double seu
     return r;
 }
 
-int **changer_plage(int **d, unsigned int n_ligne, unsigned int n_col, int a1, int a2, int min, int max)
+int **changer_plage(int **d, int n_ligne, int n_col, int a1, int a2, int min, int max)
 {
     int **r = create_matrix(n_ligne, n_col);
-    unsigned int i, j;
+    int i, j;
     for (i = 0; i < n_ligne; i++)
+    {
         for (j = 0; j < n_col; j++)
+        {
             if (d[i][j] <= a2 && d[i][j] >= a1)
+            {
                 r[i][j] = (max - min) * (d[i][j] - a1) / (a2 - a1) + min;
+            }
+            else
+            {
+                r[i][j] = 0;
+            }
+        }
+    }
     return r;
 }
 
-int **difference(int **d, unsigned int n_ligne, unsigned int n_col, int a)
+int **difference(int **d, int n_ligne, int n_col, int a)
 {
     int **r = create_matrix(n_ligne, n_col);
 
-    unsigned int i, j;
+    int i, j;
     for (i = 0; i < n_ligne; i++)
     {
         for (j = 0; j < n_col; j++)
@@ -413,7 +427,7 @@ int **difference(int **d, unsigned int n_ligne, unsigned int n_col, int a)
     }
     return r;
 }
-void sortTab(int *d, unsigned int n)
+void sortTab(int *d, int n)
 {
     tri_bulle_int(d, n);
 }
@@ -436,10 +450,10 @@ void tri_bulle_int(int *tableau, int taille)
     }
 }
 
-int **selection_k_max(int **d, unsigned int n_ligne, unsigned int n_col, unsigned int k)
+int **selection_k_max(int **d, int n_ligne, int n_col, int k)
 {
     int **max = create_matrix(k, 2);
-    unsigned int i, j, ind,s;
+    int i, j, ind, s;
     for (i = 0; i < k; i++)
     {
         // indice ligne
@@ -452,22 +466,22 @@ int **selection_k_max(int **d, unsigned int n_ligne, unsigned int n_col, unsigne
         for (j = 0; j < n_col; j++)
         {
             ind = 0;
-            while (d[i][j] <= d[ max[ind][0] ][ max[ind][1] ] && ind < k)
+            while (d[i][j] <= d[max[ind][0]][max[ind][1]] && ind < k)
             {
                 k++;
             }
             if (ind < k)
             {
-                s=ind+1;
-                while (s<k)
+                s = ind + 1;
+                while (s < k)
                 {
-                    max[s][0] = max[s-1][0];
-                    max[s][1] = max[s-1][1];
+                    max[s][0] = max[s - 1][0];
+                    max[s][1] = max[s - 1][1];
                     s++;
-                }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                }
                 max[ind][0] = i;
                 max[ind][1] = j;
-            }   
+            }
         }
     }
     return max;

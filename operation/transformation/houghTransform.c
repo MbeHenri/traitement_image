@@ -6,6 +6,7 @@
 
 int main(int argc, char const *argv[])
 {
+    int nbre_argument = argc;
     FILE *f = fopen(argv[1], "r");
     if (f == NULL)
     {
@@ -39,8 +40,11 @@ int main(int argc, char const *argv[])
     Vector_d* theta = echantillonage(theta_min,theta_max,ecart_theta);
     Vector_d* beta = echantillonage(beta_min, beta_max, ecart_beta);
     
+    printf("0/100\n");
     int ** hough = transform_hough_occur(img, beta, theta, color);
+    printf("70/100\n");
     ImageG* r = convert_matrixG(hough, beta->n, theta->n);
+    printf("100/100\n");
     
     char * r_dest = (char *)malloc((11 + strlen(argv[1])) * sizeof(char));
     r_dest[0] = '\0';

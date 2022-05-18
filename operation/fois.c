@@ -30,13 +30,12 @@ int main(int argc, char const *argv[])
         double ratio = atof(argv[2]);
 
         // on contruit l'image destination
-        char *dest = "fois_res.pgm\0";
+        char *dest = "./fois_res.pgm\0";
         if (argv[3] != NULL)
         {
             dest = (char *)malloc((1 + strlen(argv[3])) * sizeof(char));
             dest[0] = '\0';
             strcat(dest, argv[3]);
-            strcat(dest, ".pbm");
         }
         ImageG *img = fois_G(imgd, ratio);
         free_ImageG(imgd);

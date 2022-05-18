@@ -3,7 +3,7 @@
 
 #include "../entete/Vector.h"
 
-Vector *create_vector(unsigned int len)
+Vector *create_vector(int len)
 {
     Vector *result = (Vector *)malloc(sizeof(Vector));
     if (result == NULL)
@@ -26,7 +26,7 @@ void free_vector(Vector *v)
     free(v);
 }
 
-Vector_d *create_vector_d(unsigned int len)
+Vector_d *create_vector_d(int len)
 {
     Vector_d *result = (Vector_d *)malloc(sizeof(Vector_d));
     if (result == NULL)
@@ -43,7 +43,7 @@ Vector_d *create_vector_d(unsigned int len)
     result->n = len;
     return result;
 }
-void free_vector_d(Vector_d * v)
+void free_vector_d(Vector_d *v)
 {
     free(v->data);
     free(v);
@@ -51,14 +51,14 @@ void free_vector_d(Vector_d * v)
 
 Vector_d *echantillonage(double min, double max, double ecart)
 {
-    unsigned int n = 1;
+    int n = 1;
     // on recherche le nombre le nombre d'ecart possible partant de la valeur minimale
     while (min + ecart * n <= max)
     {
         n++;
     }
     Vector_d *result = create_vector_d(n);
-    unsigned int i = 0;
+    int i = 0;
     // on construit un vecteur constituant les valeurs suuccessives d'ecart
     for (i = 0; i < n; i++)
     {
