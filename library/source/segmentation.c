@@ -76,24 +76,36 @@ int **kmeans(int **d, int n_ligne, int n_col, int K, int min, int max, double e1
     return tab_c;
 }
 
-void germe_r(int **d, int **marque, int n_ligne, int n_col, int x, int y,const double e)
+void germe_r(int **d, int **marque, const int n_ligne, const int n_col, int x, int y, const double e)
 {
-    if (x >= 0 && y >= 0 && y < n_ligne && x < n_col)
+    marque[y][x] = 1;
+    int a = 0, b = 0;
+    for (a = 0; a < 3; a++)
     {
-        printf("%p", marque);
-        marque[x][y] = 1;
+        for (b = 0; b < 3; b++)
+        {
+            int x_ = x + a - 1, y_ = y + b - 1;
+            if (x_ >= 0 && y_ >= 0 && y_ < n_ligne && x_ < n_col && x_ != x && y_ != y)
+            {
+                double aux = abs(d[y][x] - d[y_][x_]);
+                if (aux < e && marque[y_][x_] == 0)
+                {
+                    germe_r(d, marque, n_ligne, n_col, x_, y_, e);
+                }
+            }
+        }
     }
 }
 
-int **germe(int **d, int n_ligne, int n_col, int x, int y, double e)
+int **germe(int **d, int n_ligne, int n_col, int x, int y, const double e)
 {
     int **marque = create_matrix(n_ligne, n_col);
     int i, j;
-    for (i = 0; i < n_ligne; i++){
+    for (i = 0; i < n_ligne; i++)
+    {
         for (j = 0; j < n_col; j++)
             marque[i][j] = 0;
     }
-    printf("%p", marque);
     germe_r(d, marque, n_ligne, n_col, x, y, e);
     return marque;
 }
