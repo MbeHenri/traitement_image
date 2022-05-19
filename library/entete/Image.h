@@ -48,6 +48,10 @@ void free_ImageG(ImageG *img);
  */
 void free_ImageB(ImageB *img);
 
+/* permet de liberer l'espace de la memoire utilisee pour une image couleur
+ */
+void free_ImageC(ImageC *img);
+
 // PROTOTYPES DES FONCTIONS DE SAUVEGARDE ET DE LECTURE D'IMAGES
 //--------------------------------------------------------------
 
@@ -196,7 +200,14 @@ grace aux images de la partie imaginaire et reelle du spectre de fourier
  */
 ImageG *transform_fourier_revG(ImageG *img_f_reelle, ImageG *img_f_imaginaire);
 
-// PROTOTYPES DES FONCTIONS DE BASE D'IMAGES IMPLIQUANT AU M+OINS DEUX TYPES D'IMAGES
+
+// PROTOTYPES DES FONCTIONS DE BASE D'IMAGES POUR LES IMAGES COULEURS
+//-------------------------------------------------------------------
+
+ImageC* histogrameC(int* hist, int len);
+
+
+// PROTOTYPES DES FONCTIONS DE BASE D'IMAGES IMPLIQUANT AU MOINS DEUX TYPES D'IMAGES
 //----------------------------------------------------------------------------------
 
 /*permet de binariser l'iamage a niveau de gris de part un seuil

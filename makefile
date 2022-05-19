@@ -64,7 +64,7 @@ contraste :   $(liste_objets) $(src_pg)/contraste.c
 	$(CC) -c $(src_pg)/contraste.c -o $(dir_o)/contraste.o $(CFLAGS)
 	$(CC) $(dir_o)/contraste.o $(liste_objets) -o $(dir_exec)/contraste $(CFLAGS)
 
-main : $(dir_o)Vector.o $(dir_o)base.o  main.c
+main : $(liste_objets)  main.c
 	$(CC) -c main.c -o $(dir_o)/main.o $(CFLAGS)
 	$(CC) $(dir_o)/main.o $(liste_objets) -o $(dir_exec)/main $(CFLAGS)
 	

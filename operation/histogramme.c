@@ -30,10 +30,10 @@ int main(int argc, char const *argv[])
         int *hist = histogram_G(img);
         free_ImageG(img);
 
-        char *dest = (char *)malloc((11 + strlen(argv[1])) * sizeof(char));
+        char *dest = (char *)malloc((12 + strlen(argv[1])) * sizeof(char));
         dest[0] = '\0';
         strcat(dest, argv[1]);
-        strcat(dest, "hist_");
+        strcat(dest, "hist");
 
         f = fopen(dest, "w");
         if (f == NULL)
@@ -46,7 +46,12 @@ int main(int argc, char const *argv[])
         fprintf(f, "couleur,occurence\n");
         for (i = 0; i < 256; i++)
             fprintf(f, "%d,%d\n", i, hist[i]);
-
+        
+        strcat(dest, "c.ppm");
+        ImageC* aux = histogrameC(hist, 256);
+        write_C(aux,dest);
+        free_ImageC(aux);
+        
         printf("// histogramme de %s est dans le fichier %s\n", argv[1], dest);
         fclose(f);
     }

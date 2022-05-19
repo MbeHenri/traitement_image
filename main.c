@@ -2,26 +2,22 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "library/entete/base.h"
+#include "library/entete/Image.h"
 
-int main(int argc, char const *argv[])
+int main()
 {
 
-    double min = atof(argv[1]), max = atof(argv[2]);
-    double ecart = atof(argv[3]);
-    Vector_d* d = echantillonage(min, max, ecart);
+    printf("hello\n");
+    int * h =malloc(256*sizeof(int));
     
-    if (d->n == 0)
+    int i =0;
+    for ( i = 0; i < 256; i++)
     {
-        printf("Rien est possible\n");
-        exit(1);
+        h[i] = 2*i;
     }
-    unsigned int i = 0;
-    for ( i = 0; i < d->n; i++)
-    {
-        printf("%f ", d->data[i]);
-    }
-    printf("\n%d\n", d->n);
-    free_vector_d(d);
+    
+    ImageC* img = histogrameC(h,256);
+    
+    write_C(img,"hist.ppm");
     return 0;
 }

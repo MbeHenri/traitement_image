@@ -17,6 +17,14 @@ void free_ImageB(ImageB *img)
     free_matrix(img->data, img->nLigne);
     free(img);
 }
+void free_ImageC(ImageC *img)
+{
+    free_matrix(img->r, img->nLigne);
+    free_matrix(img->g, img->nLigne);
+    free_matrix(img->b, img->nLigne);
+    free(img);
+}
+
 ImageG *read_G(FILE *f)
 {
     ImageG *img = (ImageG *)malloc(sizeof(ImageG));
@@ -85,6 +93,35 @@ ImageB *read_B(FILE *f)
     }
     return img;
 }
+
+ImageC *read_C(FILE *f){
+    ImageC *img = (ImageC *)malloc(sizeof(ImageC));
+    if (img == NULL)
+    {
+        printf("[ il est impossible d'allouer de la memoire pour l'image ]\n");
+        exit(1);
+    }
+    while (fgetc(f) == '#')
+    {
+        while (getc(f) != '\n');
+    }
+    int max;
+    fseek(f, -1, SEEK_CUR);
+    fscanf(f, "%d %d", &img->nColonne, &img->nLigne);
+    img->r = create_matrix(img->nLigne, img->nColonne);
+    img->g = create_matrix(img->nLigne, img->nColonne);
+    img->b = create_matrix(img->nLigne, img->nColonne);
+    fscanf(f, "%d", &max);
+    int i, j;
+    for (i = 0; i < img->nLigne; i++){
+        for (j = 0; j < img->nColonne; j++){
+            fscanf(f, "%d", &img->r[i][j]);
+            fscanf(f, "%d", &img->g[i][j]);
+            fscanf(f, "%d", &img->b[i][j]);
+        }
+    }
+    return img;
+}
 void write_G(ImageG *img, const char *path)
 {
     FILE *f = fopen(path, "w");
@@ -106,6 +143,30 @@ void write_G(ImageG *img, const char *path)
     }
     fclose(f);
 }
+void write_C(ImageC *img, const char *path)
+{
+    FILE *f = fopen(path, "w");
+    if (f == NULL)
+    {
+        exit(1);
+    }
+    fprintf(f, "P3\n");
+    fprintf(f, "# realisation de Mbe\n");
+    fprintf(f, "%d %d\n", img->nColonne, img->nLigne);
+    fprintf(f, "%d\n", 255);
+    int i, j;
+    for (i = 0; i < img->nLigne; i++)
+    {
+        for (j = 0; j < img->nColonne; j++)
+        {
+            fprintf(f, "%d\n", img->r[i][j]);
+            fprintf(f, "%d\n", img->g[i][j]);
+            fprintf(f, "%d\n", img->b[i][j]);
+        }
+    }
+    fclose(f);
+}
+
 void write_B(ImageB *img, const char *path)
 {
     FILE *f = fopen(path, "w");
@@ -482,4 +543,27 @@ ImageG *germeG(ImageG *img, int x, int y, double e)
     r->nColonne = img->nColonne;
     r->data = germe(img->data, img->nLigne, img->nColonne, x, y, e);
     return ouG(r, img);
+}
+
+ImageC* histogrameC(int* hist, int len){
+    ImageC *img = malloc(sizeof(ImageC));
+    if (img == NULL)
+    {
+        exit(1);
+    }
+    img->nLigne = img->nLigne;
+    img->nColonne = img->nColonne;
+    int n = 0,i =0;
+    for (i = 0; i < len; i++)
+        if(n < hist[i])
+            n = hist[i];
+    
+    const int ecart_x = 2, esp_haut = 50, esp_gauche=50, esp_bas=50, esp_droite=50, longeur=200;
+    img->nLigne = esp_haut+ esp_bas+ longeur;
+    img->nColonne = esp_gauche + esp_droite + (len+2)*ecart_x;
+    
+    img->r = matrice_hist(n,hist,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,0,72);
+    img->g = matrice_hist(n,hist,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,0,214);
+    img->b = matrice_hist(n,hist,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,0,214);
+    return img;
 }
