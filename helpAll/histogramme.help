@@ -1,0 +1,24 @@
+NOM
+       histogramme
+
+SYNTAXE
+        histogramme -h|--help
+        histogramme <chemin image source> [<chemin de l'histogramme en image> [<chemin de l'histogramme en texte> ]]
+
+DESCRIPTION
+       permet d'obtenir un fichier texte representant l'histogramme de l'image source ainsi que sa visualisation 
+       sur image en couleur de format ppm. Mais ne prend en charge que les images de format ppm, pgm, pbm 
+
+OPTIONS
+        -h|--help permet d'obtenir catte aide
+
+EXEMPLES
+        histogramme -h
+        histogramme --help
+        histogramme 1.pgm 
+            mettra l'histogramme en image dans le dossier courant avec le nom "1-hist.ppm"
+        histogramme 1.pgm img_hist.ppm
+        histogramme 1.pgù img_hist.ppm hist.txt
+
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

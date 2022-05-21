@@ -27,7 +27,7 @@ dir_exec = execute/executables
 
 # > les objets de librairies
 
-liste_objets =$(dir_o)/change_domain.o $(dir_o)/convolution.o $(dir_o)/base.o $(dir_o)/Image.o $(dir_o)/Vector.o $(dir_o)/transformation.o $(dir_o)/segmentation.o
+liste_objets =$(dir_o)/change_domain.o $(dir_o)/convolution.o $(dir_o)/base.o $(dir_o)/Image.o $(dir_o)/Vector.o $(dir_o)/transformation.o $(dir_o)/segmentation.o $(dir_o)/file.o
 
 Vector.o : $(src_lib)/Vector.c
 	$(CC) -c $(src_lib)/Vector.c -o $(dir_o)/Vector.o $(CFLAGS)
@@ -49,6 +49,9 @@ transformation.o : $(src_lib)/transformation.c
 
 segmentation.o : $(src_lib)/segmentation.c
 	$(CC) -c $(src_lib)/segmentation.c -o $(dir_o)/segmentation.o $(CFLAGS)
+	
+file.o : $(src_lib)/file.c
+	$(CC) -c $(src_lib)/file.c -o $(dir_o)/file.o $(CFLAGS)
 	
 # > les executables	
 

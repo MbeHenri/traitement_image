@@ -418,9 +418,8 @@ void replace_on_disque_(int **d, int n_ligne, int n_col, int xr, int yr, double 
         }
     }
 }
-void replace_on_rectangle_(int **d, int n_ligne, int n_col, int xr, int yr, double longueur, double largeur, int val_in, int val_e)
+void replace_on_rectangle_(int **d, int n_ligne, int n_col, int xr, int yr, double longueur, double largeur, int val_in)
 {
-
     int x, y;
     for (y = 0; y < n_ligne; y++)
     {
@@ -551,50 +550,53 @@ int **selection_k_max(int **d, int n_ligne, int n_col, int k)
     return max;
 }
 
-int **matrice_hist(int npixels, int *hist, int len_hist, int ecart_x, int esp_haut, int esp_gauche, int esp_bas, int esp_droite, int longeur, int val_rep, int val_bord, int val_in)
+int **matrice_hist(int npixels, int *hist, int len_hist, int ecart_x, int esp_haut, int esp_gauche, int esp_bas, int esp_droite, int longeur, int val_rep, int val_in)
 {
-    int col = esp_gauche + esp_droite + (len_hist+2)*ecart_x , lig = esp_haut +esp_bas+ longeur;
-    int ** r = create_matrix(lig, col);
+    int col = esp_gauche + esp_droite + (len_hist + 2) * ecart_x, lig = esp_haut + esp_bas + longeur;
+    int **r = create_matrix(lig, col);
     int i, j;
     for (i = 0; i < lig; i++)
         for (j = 0; j < col; j++)
             r[i][j] = 255;
-            
-    //dessin de la ligne horizontale
-    int x1 = esp_gauche - 1, y1= esp_haut -1, x2= esp_gauche - 1, y2=esp_haut + longeur -1;
-    replace_on_line_(r,x1,y1,x2,y2,val_rep);
-    
-    //dessin de la ligne verticale
-    x1 += (len_hist+2)*ecart_x; y1+=longeur;
-    replace_on_line_(r,x1,y1,x2,y2,val_rep);
-    
-    //dessin des tirets sur la ligne horizontale
-    x1 = esp_gauche - 5; x2 = esp_gauche - 1;
+
+    // dessin de la ligne horizontale
+    int x1 = esp_gauche - 1, y1 = esp_haut - 1, x2 = esp_gauche - 1, y2 = esp_haut + longeur - 1;
+    replace_on_line_(r, x1, y1, x2, y2, val_rep);
+
+    // dessin de la ligne verticale
+    x1 += (len_hist + 2) * ecart_x;
+    y1 += longeur;
+    replace_on_line_(r, x1, y1, x2, y2, val_rep);
+
+    // dessin des tirets sur la ligne horizontale
+    x1 = esp_gauche - 5;
+    x2 = esp_gauche - 1;
     for (i = 0; i <= 4; i++)
     {
-        y1 = esp_haut + i*longeur/4 -1;
+        y1 = esp_haut + i * longeur / 4 - 1;
         y2 = y1;
-        replace_on_line_(r,x1,y1,x2,y2,val_rep);
+        replace_on_line_(r, x1, y1, x2, y2, val_rep);
     }
-    
-    //dessin des tirets sur la ligne verticale
-    y1= longeur + esp_haut - 1; y2 =y1 + 3;
+
+    // dessin des tirets sur la ligne verticale
+    y1 = longeur + esp_haut - 1;
+    y2 = y1 + 3;
     for (i = 0; i <= len_hist; i++)
     {
-        x1 = esp_gauche + i*ecart_x - 1;
+        x1 = esp_gauche + i * ecart_x - 1;
         x2 = x1;
-        replace_on_line_(r,x1,y1,x2,y2,val_rep);
+        replace_on_line_(r, x1, y1, x2, y2, val_rep);
     }
-    
-    //tracez des rectangles
-    y2= longeur + esp_haut - 4;
+
+    // tracez des rectangles
+    y2 = longeur + esp_haut - 4;
     int taille;
     for (i = 0; i < len_hist; i++)
     {
-        taille = longeur *  hist[i] / npixels;
-        x1 = esp_gauche + (1+i)*ecart_x -1;
-        y1 = y2+3 - taille;
-        replace_on_rectangle_(r,lig,col,x1,y1,ecart_x,taille, val_in, val_bord);
+        taille = longeur * hist[i] / npixels;
+        x1 = esp_gauche + (1 + i) * ecart_x - 1;
+        y1 = y2 + 3 - taille;
+        replace_on_rectangle_(r, lig, col, x1, y1, ecart_x, taille, val_in);
     }
     return r;
 }

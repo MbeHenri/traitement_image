@@ -132,7 +132,7 @@ void replace_on_disque_(int **d, int n_ligne, int n_col, int xr, int yr, double 
 
 /* permet de remplacer par 'val_replace' les valeurs du rectangle ((xr,yr), longueur, largeur)
  */
-void replace_on_rectangle_(int **d, int n_ligne, int n_col, int xr, int yr, double longueur, double largeur, int val_in, int val_e);
+void replace_on_rectangle_(int **d, int n_ligne, int n_col, int xr, int yr, double longueur, double largeur, int val_in);
 
 /* permet de changer lineairement l'intervalle de valeur des cellules comprises dans l'intervalle [ a1.. a2] vers [min .. max]
 ces intervalles etant inclus dans l'intervalle [ 0..255] eventuellement
@@ -143,6 +143,6 @@ int **changer_plage(int **d, int n_ligne, int n_col, int a1, int a2, int min, in
 int **selection_k_max(int **d, int n_ligne, int n_col, int k);
 
 /* permet d'obtenir une matrice d'entier issues d'un ensemble de valeurs ordonnees pour une image */
-int**matrice_hist(int nbpixels,int* hist, int len_hist, int ecart_x, int esp_haut, int esp_gauche, int esp_bas, int esp_droite, int longeur, int val_rep, int val_bord, int val_in);
+int**matrice_hist(int nbpixels,int* hist, int len_hist, int ecart_x, int esp_haut, int esp_gauche, int esp_bas, int esp_droite, int longeur, int val_rep, int val_in);
 
 #endif // BASE_H_INCLUDED

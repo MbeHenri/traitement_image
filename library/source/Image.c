@@ -562,8 +562,8 @@ ImageC* histogrameC(int* hist, int len){
     img->nLigne = esp_haut+ esp_bas+ longeur;
     img->nColonne = esp_gauche + esp_droite + (len+2)*ecart_x;
     
-    img->r = matrice_hist(n,hist,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,0,72);
-    img->g = matrice_hist(n,hist,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,0,214);
-    img->b = matrice_hist(n,hist,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,0,214);
+    img->r = matrice_hist(n,hist,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,72);
+    img->g = matrice_hist(n,hist,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,214);
+    img->b = matrice_hist(n,hist,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,214);
     return img;
 }
