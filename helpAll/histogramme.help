@@ -10,13 +10,13 @@ DESCRIPTION
        sur image en couleur de format ppm. Mais ne prend en charge que les images de format ppm, pgm, pbm 
 
 OPTIONS
-        -h|--help permet d'obtenir catte aide
+        -h|--help permet d'obtenir cette aide
 
 EXEMPLES
         histogramme -h
         histogramme --help
         histogramme 1.pgm 
-            mettra l'histogramme en image dans le dossier courant avec le nom "1-hist.ppm"
+            méttra l'histogramme en image dans le dossier courant avec le nom "1-hist.ppm"
         histogramme 1.pgm img_hist.ppm
         histogramme 1.pgù img_hist.ppm hist.txt
 

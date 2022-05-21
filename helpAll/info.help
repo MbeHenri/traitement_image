@@ -1,0 +1,22 @@
+NOM
+       info
+
+SYNTAXE
+        info -h|--help
+        info <chemin image> [<chemin resultat>]
+
+DESCRIPTION
+        permet d'obtenir les caracteristiques de l'image et de le mettre dans un fichier
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        info -h
+        info --help
+        info 1.pgm 
+            méttra le resultat dans le dossier courant avec le nom "1-info.txt"
+        info 1.pgm info.txt
+
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

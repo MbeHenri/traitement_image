@@ -11,11 +11,10 @@
 int main(int argc, char const *argv[])
 {
     //on verifie s'il ya au moins un parametre passé
-    if (argv[1]==NULL)
+    if (argv[1]==NULL || argc <1 )
     {
         exit(1);
     }
-    
     FILE* f=NULL;
     
     // on verifie si le premier argument est --help ou -h 
@@ -62,8 +61,7 @@ int main(int argc, char const *argv[])
         free_ImageG(img);
         ImageC* aux = histogrameC(hist, 256);
         
-        
-        //on cherche les chemins de destination et on sauvegarde
+        //on cherche les chemins de destination 
         char *dest1 = NULL;
         char* dest2 = NULL;
         if (argv[2] == NULL)
@@ -74,7 +72,7 @@ int main(int argc, char const *argv[])
                 exit(1);
             }
             i_file* info = info_file(argv[1]);
-            
+                
             dest1 = malloc((11+strlen(info->name)+strlen(current_dir))*sizeof(char));
             dest2 = malloc((11+strlen(info->name)+strlen(current_dir))*sizeof(char));
             dest1[0]='\0';
@@ -83,7 +81,7 @@ int main(int argc, char const *argv[])
             strcat(dest1,"/");
             strcat(dest1,info->name);
             strcat(dest1,"-hist.ppm");
-            
+                
             strcat(dest2,current_dir);
             strcat(dest2,"/");
             strcat(dest2,info->name);
@@ -96,7 +94,7 @@ int main(int argc, char const *argv[])
                 strcpy(dest2, argv[3]);
             }
         }
-        
+        // et on sauvegarde
         if(dest1!=NULL){
             write_C(aux,dest1);
             free(dest1);
@@ -105,7 +103,7 @@ int main(int argc, char const *argv[])
             f = fopen(dest2, "w");
             int i= 0;
             for (i = 0; i < 256; i++)
-                fprintf(f,"%d\n", hist[i]);
+                fprintf(f,"%d,%d\n",i, hist[i]);
             fclose(f);
             free(dest2);
         }

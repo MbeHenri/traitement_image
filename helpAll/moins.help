@@ -1,0 +1,22 @@
+NOM
+       moins
+
+SYNTAXE
+        moins -h|--help
+        moins <chemin image de type 'a'> <chemin autre image de type 'a'> [<chemin resultat>]
+
+DESCRIPTION
+        permet d'obtenir le resultat de la reduction d'une image sur une autre de memes types( couleur et aa niveau de gris)
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        moins -h
+        moins --help
+        moins 1.pgm 2.pbm
+            méttra le resultat dans le dossier courant avec le nom "1-moins-2.pgm"
+        moins 1.pgm 2.pgm res.pgm
+
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

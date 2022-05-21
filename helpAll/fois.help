@@ -1,0 +1,22 @@
+NOM
+       fois
+
+SYNTAXE
+        fois -h|--help
+        fois <chemin image> <ratio> [<chemin resultat>]
+
+DESCRIPTION
+        permet d'obtenir un produit d'image a un reel
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        fois -h
+        fois --help
+        fois 1.pgm 0.5
+            méttra le resultat dans le dossier courant avec le nom "1-fois(0.5).pgm"
+        fois 1.pgm 0.5 res.pgm
+
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

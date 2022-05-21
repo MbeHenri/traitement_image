@@ -1,0 +1,8 @@
+hauteur:440
+largeur:455
+max:255
+min:0
+max:255
+contraste min-max:1.000000
+contraste ecart-type:66.387391
+luminance:148.000000
