@@ -58,14 +58,6 @@ file.o : $(src_lib)/file.c
 histogramme :  $(liste_objets) $(src_pg)/histogramme.c
 	$(CC) -c $(src_pg)/histogramme.c -o $(dir_o)/histogramme.o $(CFLAGS)
 	$(CC) $(dir_o)/histogramme.o $(liste_objets) -o $(dir_exec)/histogramme $(CFLAGS)
-	
-luminance :   $(liste_objets) $(src_pg)/luminance.c
-	$(CC) -c $(src_pg)/luminance.c -o $(dir_o)/luminance.o $(CFLAGS)
-	$(CC) $(dir_o)/luminance.o $(liste_objets) -o $(dir_exec)/luminance $(CFLAGS)
-
-contraste :   $(liste_objets) $(src_pg)/contraste.c 
-	$(CC) -c $(src_pg)/contraste.c -o $(dir_o)/contraste.o $(CFLAGS)
-	$(CC) $(dir_o)/contraste.o $(liste_objets) -o $(dir_exec)/contraste $(CFLAGS)
 
 main : $(liste_objets)  main.c
 	$(CC) -c main.c -o $(dir_o)/main.o $(CFLAGS)
@@ -150,6 +142,14 @@ transformation_lineaire_morceau : $(liste_objets) $(src_pg)/transformation/trans
 	$(CC) -c $(src_pg)/transformation/transformation_lineaire_morceau.c -o $(dir_o)/transformation_lineaire_morceau.o $(CFLAGS)
 	$(CC) $(dir_o)/transformation_lineaire_morceau.o $(liste_objets) -o $(dir_exec)/transformation_lineaire_morceau $(CFLAGS)
 
+interpolation_knn : $(liste_objets) $(src_pg)/transformation/interpolation_knn.c
+	$(CC) -c $(src_pg)/transformation/interpolation_knn.c -o $(dir_o)/interpolation_knn.o $(CFLAGS)
+	$(CC) $(dir_o)/interpolation_knn.o $(liste_objets) -o $(dir_exec)/interpolation_knn $(CFLAGS)
+	
+interpolation_bil : $(liste_objets) $(src_pg)/transformation/interpolation_bil.c
+	$(CC) -c $(src_pg)/transformation/interpolation_bil.c -o $(dir_o)/interpolation_bil.o $(CFLAGS)
+	$(CC) $(dir_o)/interpolation_bil.o $(liste_objets) -o $(dir_exec)/interpolation_bil $(CFLAGS)
+	
 kmeans : $(liste_objets) $(src_pg)/segmentation/kmeans.c
 	$(CC) -c $(src_pg)/segmentation/kmeans.c -o $(dir_o)/kmeans.o $(CFLAGS)
 	$(CC) $(dir_o)/kmeans.o $(liste_objets) -o $(dir_exec)/kmeans $(CFLAGS)

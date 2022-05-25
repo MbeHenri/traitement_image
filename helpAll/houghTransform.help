@@ -1,0 +1,43 @@
+NOM
+       houghTransform
+
+SYNTAXE
+        houghTransform -h|--help
+        houghTransform <chemin image source> <params> <K>[<chemin de l'image dde hough> [<chemin du fichier des "K" droite>]]
+
+DESCRIPTION
+       permet d'obtenir le spectre de hough dans le domaine polaire avec un fichier contenant
+       les "K" les plus probables droites
+       "params" etant le chemin du fichier contenant les elements utiles a l'obtention de ces resultats qui doit etre comme suit
+                
+                <theta_min> <theta_max> <ecart_theta> <beta_min> <beta_max> <ecart_beta> <couleur>
+                
+        - theta_min : valeur minimale de theta
+        - theta_max : valeur maximale de theta 
+        - beta_min : valeur minimale de beta 
+        - beta_max : valeur maximale de beta
+        - ecart_theta : ecart permettant de rendre distret [theta_min..theta_max] 
+        - ecart_beta : ecart permettant de rendre distret [beta_min..beta_max]
+        - couleur : permet d'indiquer si on prendra le point a "1" (blanc) ou a "0" (noir)
+        
+        le dossier des segments est decrit comme suit
+                x1;y1;x2;y2
+                0;10;24;0
+                .
+                .
+                .
+        (x1,y1) et (x2,y2) representent les extremites des segments 
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        houghTransform -h
+        houghTransform --help
+        houghTransform 1.pgm ../params 5 
+            méttra le spectre dans le dossier courant avec le nom "1-hough(params).pgm"
+            et le fichier des droites sous le nom "1-hough(params-5).txt
+        houghTransform 1.pgm ../params 5 spectre
+        houghTransform 1.pgm ../params 5 spectre droites
+
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

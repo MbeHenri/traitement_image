@@ -18,7 +18,7 @@ int **egalizer_hist(int **d, int n_ligne, int n_col);
 /*
     interpolation d'images (changement d'echelle)
 */
-int **interpolation_knn(int **d, int n_ligne, int n_col, int k);
+int **interpolation_knn(int **d, int n_ligne, int n_col, int ki, int kj);
 int **interpolation_bilineaire(int **d, int n_ligne, int n_col);
 int **interpolation_bicubique(int **d, int n_ligne, int n_col);
 

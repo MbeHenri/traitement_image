@@ -1,0 +1,23 @@
+NOM
+       interpolation_bil
+
+SYNTAXE
+        interpolation_bil -h|--help
+        interpolation_bil <chemin image source>[<fichier des barres de segment>]
+
+DESCRIPTION
+       permet d'obtenir l'image obtenu sur l'image source par la methodes d'interpollation des plus proches
+       voisins
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        interpolation_bil -h
+        interpolation_bil --help
+        interpolation_bil 1.pgm 2
+                méttra l'image resultante dans le dossier courant avec le nom "1-ibil.pgm"    
+        interpolation_bil 1.pgm res.pgm
+                
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

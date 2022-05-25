@@ -18,7 +18,7 @@ EXEMPLES
         histogramme 1.pgm 
             méttra l'histogramme en image dans le dossier courant avec le nom "1-hist.ppm"
         histogramme 1.pgm img_hist.ppm
-        histogramme 1.pgù img_hist.ppm hist.txt
+        histogramme 1.pgm img_hist.ppm hist.txt
 
 AUTEUR
        Mbe Mbe Mindjana Loic Henri

@@ -21,7 +21,7 @@ int **transformer_hough(int **d, int n_ligne, int n_col, double *beta, int len_b
             {
                 for (t = 0; t < len_theta; t++)
                 {
-                    const double aux = j * cos(theta[t]) + i * sin(theta[t]);
+                    const double aux = j * cos(PI*theta[t]/180) + i * sin(PI*theta[t]/180);
                     const int ind = indice_val_proche(beta, len_beta, aux);
                     if (ind > 0)
                         result[ind][t]++;
@@ -42,7 +42,7 @@ int **transform_fourier_reelle(int **d, int n_ligne, int n_col)
             result[p][q] = 0;
             for (i = 0; i < n_ligne; i++)
                 for (j = 0; j < n_col; j++)
-                    result[p][q] += d[i][j] * cos(360 * ((p * i) / n_ligne + (q * j) / n_col));
+                    result[p][q] += d[i][j] * cos(2*PI*((p * i) / n_ligne + (q * j) / n_col));
         }
     }
     return result;
@@ -58,7 +58,7 @@ int **transform_fourier_imaginaire(int **d, int n_ligne, int n_col)
             result[p][q] = 0;
             for (i = 0; i < n_ligne; i++)
                 for (j = 0; j < n_col; j++)
-                    result[p][q] -= d[i][j] * sin(360 * ((p * i) / n_ligne + (q * j) / n_col));
+                    result[p][q] -= d[i][j] * sin(2*PI*((p * i) / n_ligne + (q * j) / n_col));
         }
     }
     return result;

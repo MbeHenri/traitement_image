@@ -1,0 +1,22 @@
+NOM
+       transformation_lineaire_satur
+
+SYNTAXE
+        transformation_lineaire_satur -h|--help
+        transformation_lineaire_satur <chemin image source> <S1> <S2>[<chemin du profil en image>]
+
+DESCRIPTION
+       permet d'obtenir le resultat de la transpose lineaire par saturation sur l'image source
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        transformation_lineaire_satur -h
+        transformation_lineaire_satur --help
+        transformation_lineaire_satur 1.pgm 40 20
+                méttra l'image resultante dans le dossier courant avec le nom "1-tls(40-20).pgm"    
+        transformation_lineaire_satur 1.pgm 20 40 res.pgm
+                
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

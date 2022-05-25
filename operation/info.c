@@ -30,8 +30,8 @@ int main(int argc, char const *argv[])
                 printf("%c", car);
             } while (car != EOF);
             printf("\n");
+            fclose(f);
         }
-        
         return 0;
     }
     //lecture du premier fichier
@@ -76,6 +76,7 @@ int main(int argc, char const *argv[])
             strcat(dest1,info->name);
             strcat(dest1,"-info.txt");
             free(current_dir);
+            free_i_file(info);
         }else{
             dest1 = malloc((1+strlen(argv[2]))*sizeof(char));
             strcpy(dest1, argv[2]);
@@ -101,7 +102,6 @@ int main(int argc, char const *argv[])
     else if (strcmp(ch, "P3") == 0)
     {
         printf("> pas encore pris en charge \n");
-
         fclose(f);
     }
     else

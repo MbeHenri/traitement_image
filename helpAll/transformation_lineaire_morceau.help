@@ -1,0 +1,28 @@
+NOM
+       transformation_lineaire_morceau
+
+SYNTAXE
+        transformation_lineaire_morceau -h|--help
+        transformation_lineaire_morceau <chemin image source> <fichier des barres de segment>]
+
+DESCRIPTION
+       permet d'obtenir le resultat de la transpose lineaire par morceau sur l'image source
+       de part un ensemble de barres de segmentation S1,S2,...,Sn et de value associée V1,V2,...,Vn donnés dans un fichier
+       sous la forme:
+       
+               n
+               S1 S2 ... Sn
+               V1 V2 ... Vn
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        transformation_lineaire_morceau -h
+        transformation_lineaire_morceau --help
+        transformation_lineaire_morceau 1.pgm segs.txt
+                méttra l'image resultante dans le dossier courant avec le nom "1-tlm(segs).pgm"    
+        transformation_lineaire_morceau 1.pgm segs.txt res.pgm
+                
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

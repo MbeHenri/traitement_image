@@ -1,47 +1,104 @@
-#include <stdio.h>
+#define _GNU_SOURCE
 #include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <errno.h>
 #include <string.h>
+
 #include "../library/entete/Image.h"
+#include "../library/entete/file.h"
 
 int main(int argc, char const *argv[])
 {
-    FILE* f = fopen(argv[1], "r");
+    //on verifie s'il ya au moins un parametre passé
+    if (argv[1]==NULL || argc <1 )
+    {
+        exit(1);
+    }
+    FILE* f=NULL;
+    
+    // on verifie si le premier argument est --help ou -h 
+    if (strcmp(argv[1], "--help")==0 || strcmp(argv[1], "-h")==0)
+    {
+        f=fopen("helpAll/binarisation.help", "r");
+        int car = 0;
+        if (f != NULL)
+        {
+            // Boucle de lecture des caractères un à un
+            do{
+                car = fgetc(f);
+                printf("%c", car);
+            } while (car != EOF);
+            printf("\n");
+            fclose(f);
+        }
+        return 0;
+    }
+    //lecture du premier fichier
+    f = fopen(argv[1], "r");
     if (f == NULL){
         printf("[ il n'est pas possible d'ouvrir le fichier ]\n");
         exit(1);
     }
-    
     char ch[5];
     fscanf(f, "%s\n", ch);
-    
     if( strcmp(ch, "P1") == 0){
-        printf("> Image binaire \n");
-        printf("[ rien a faire ]\n");
+        printf("> pas encore pris en charge \n");
         fclose(f);
     }else if (strcmp(ch, "P2") == 0)
     {
-        printf("> Image a niveau de gris \n");
         ImageG * img = read_G(f);
         fclose(f);
-        
-        double seuil = atof(argv[2]);
+        if (argv[2]==NULL)
+        {
+            free_ImageG(img);
+            printf("[ il faut donner le seuil ]\n");
+            exit(1);
+        }
+        double seuil = 0; seuil= atof(argv[2]);
+        if (seuil <= 0 || seuil >= 255)
+        {
+            free_ImageG(img);
+            printf("[ le seuil doit etre compris entre 0 et 255 ]\n");
+            exit(1);
+        }
         ImageB* r = binarisationG(img, seuil);
-        
         free_ImageG(img);
         
-        // on contruit l'image destination
-        char* dest = (char*) malloc((5+strlen(argv[1]))* sizeof(char));
-        dest[0]='\0';
-        strcat(dest,argv[1]);
-        strcat(dest,".pbm");
-        
-        write_B(r,dest);
-        
+        //on cherche le chemin de destination 
+        char *dest1 = NULL;
+        if (argv[3] == NULL)
+        {
+            char* current_dir = get_current_dir_name();
+            if (current_dir == NULL)
+            {
+                free_ImageG(r);
+                exit(1);
+            }
+            i_file* info1 = info_file(argv[1]);
+            
+            dest1 = malloc((15+strlen(info1->name)+strlen(argv[2])+strlen(current_dir))*sizeof(char));
+            dest1[0]='\0';
+            strcat(dest1,current_dir);
+            strcat(dest1,"/");
+            strcat(dest1,info1->name);
+            strcat(dest1,"-bin(");
+            strcat(dest1,argv[2]);
+            strcat(dest1,").pgm");
+            free(current_dir);
+            free_i_file(info1);
+        }else{
+            dest1 = malloc((1+strlen(argv[3]))*sizeof(char));
+            strcpy(dest1, argv[3]);
+        }
+        // et on sauvegarde
+        if(dest1!=NULL){
+            write_B(r,dest1);
+            free(dest1);
+        }
         free_ImageB(r);
-    
     }else if( strcmp(ch, "P3") == 0){
-        printf("> Image a couleur \n");
-        
+        printf(">pas encore pris en charge \n");
         fclose(f);
     }else{
         printf("[ format de fichier non pris en charge ]\n");

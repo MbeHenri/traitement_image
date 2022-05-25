@@ -1,0 +1,23 @@
+NOM
+       interpolation_knn
+
+SYNTAXE
+        interpolation_knn -h|--help
+        interpolation_knn <chemin image source> <k> [<fichier des barres de segment>]
+
+DESCRIPTION
+       permet d'obtenir l'image source "k" fois plus grande par la methodes d'interpollation des plus proches
+       voisins
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        interpolation_knn -h
+        interpolation_knn --help
+        interpolation_knn 1.pgm 2
+                méttra l'image resultante dans le dossier courant avec le nom "1-i(2)nn.pgm"    
+        interpolation_knn 1.pgm res.pgm
+                
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

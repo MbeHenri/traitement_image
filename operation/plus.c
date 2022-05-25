@@ -57,6 +57,7 @@ int main(int argc, char const *argv[])
         f = fopen(argv[2], "r");
         if (f == NULL)
         {
+            free_ImageG(img1);
             printf("[ il n'est pas possible d'ouvrir le fichier ]\n");
             exit(1);
         }
@@ -84,6 +85,7 @@ int main(int argc, char const *argv[])
             char* current_dir = get_current_dir_name();
             if (current_dir == NULL)
             {
+                free_ImageG(img);
                 exit(1);
             }
             i_file* info1 = info_file(argv[1]);
@@ -97,6 +99,9 @@ int main(int argc, char const *argv[])
             strcat(dest1,"-plus-");
             strcat(dest1,info2->name);
             strcat(dest1,".pgm");
+            free(current_dir);
+            free_i_file(info1);
+            free_i_file(info2);
         }else{
             dest1 = malloc((1+strlen(argv[3]))*sizeof(char));
             strcpy(dest1, argv[3]);

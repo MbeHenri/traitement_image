@@ -243,12 +243,13 @@ int **ou_(int **d1, int **d2, int n_ligne, int n_col, int a)
     return d;
 }
 
-Vector *profil_intensite_(int **d, int x1, int y1, int x2, int y2)
+int**profil_intensite_(int **d, int x1, int y1, int x2, int y2, int* len)
 {
     int x, y, max = 0, min = 0;
-    Vector *result = NULL;
+    int**result = NULL;
     if (x1 == x2)
     {
+        // on recherche le min et le max
         max = y1;
         min = y2;
         if (max < y2)
@@ -256,12 +257,20 @@ Vector *profil_intensite_(int **d, int x1, int y1, int x2, int y2)
             min = y1;
             max = y2;
         }
-        result = create_vector(max - min + 1);
-        for (y = min; y <= max; y++)
-            result->data[y - min] = d[y][x2];
+        *len = max - min + 1;
+        result = create_matrix(3, *len);
+        for (y = min; y <= max; y++){
+            //on sauvegarde la valeur de pixels
+            result[0][y-min] = d[y][x2];
+            //on sauvegarde l'indice x
+            result[1][y-min] = x1;
+            //on sauvegarde l'indice y
+            result[2][y-min] = y;
+        }
     }
     else
     {
+        // on recherche le min et le max
         max = x1;
         min = x2;
         if (max < x2)
@@ -269,9 +278,17 @@ Vector *profil_intensite_(int **d, int x1, int y1, int x2, int y2)
             min = x1;
             max = x2;
         }
-        result = create_vector(max - min + 1);
-        for (x = min; x <= max; x++)
-            result->data[x - min] = d[((y2 - y1) / (x2 - x1)) * (x - x1) + y1][x];
+        *len = max - min + 1;
+        const double a = (y2 - y1) / (x2 - x1);
+        result = create_matrix(3, *len);
+        for (x = min; x <= max; x++){
+            //on sauvegarde l'indice x
+            result[1][x-min] = x;
+            //on sauvegarde l'indice y
+            result[2][x-min] = a*(x - x1) + y1;
+            //on sauvegarde la valeur de pixels
+            result[0][x-min] = d[result[2][x-min]][x];
+        }
     }
     return result;
 }
@@ -305,7 +322,34 @@ int **replace_line_(int **d, int n_ligne, int n_col, int x1, int y1, int x2, int
     }
     return r;
 }
-
+void replace_on_line_(int **d, int x1, int y1, int x2, int y2, int val_replace)
+{
+    int x, y, max = 0, min = 0;
+    if (x1 == x2)
+    {
+        max = y1;
+        min = y2;
+        if (max < y2)
+        {
+            min = y1;
+            max = y2;
+        }
+        for (y = min; y <= max; y++)
+            d[y][x2] = val_replace;
+    }
+    else
+    {
+        max = x1;
+        min = x2;
+        if (max < x2)
+        {
+            min = x1;
+            max = x2;
+        }
+        for (x = min; x <= max; x++)
+            d[((y2 - y1) / (x2 - x1)) * (x - x1) + y1][x] = val_replace;
+    }
+}
 int **replace_circle_(int **d, int n_ligne, int n_col, int xr, int yr, double rayon, int val_replace)
 {
     int **r = create_matrix(n_ligne, n_col);
@@ -369,35 +413,6 @@ int **replace_rectangle_(int **d, int n_ligne, int n_col, int xr, int yr, double
         }
     }
     return r;
-}
-
-void replace_on_line_(int **d, int x1, int y1, int x2, int y2, int val_replace)
-{
-    int x, y, max = 0, min = 0;
-    if (x1 == x2)
-    {
-        max = y1;
-        min = y2;
-        if (max < y2)
-        {
-            min = y1;
-            max = y2;
-        }
-        for (y = min; y <= max; y++)
-            d[y][x2] = val_replace;
-    }
-    else
-    {
-        max = x1;
-        min = x2;
-        if (max < x2)
-        {
-            min = x1;
-            max = x2;
-        }
-        for (x = min; x <= max; x++)
-            d[((y2 - y1) / (x2 - x1)) * (x - x1) + y1][x] = val_replace;
-    }
 }
 void replace_on_disque_(int **d, int n_ligne, int n_col, int xr, int yr, double rayon, int val_in, int val_e)
 {
@@ -515,39 +530,39 @@ void tri_bulle_int(int *tableau, int taille)
 
 int **selection_k_max(int **d, int n_ligne, int n_col, int k)
 {
-    int **max = create_matrix(k, 2);
-    int i, j, ind, s;
+    int **kmax = create_matrix(k, 2);
+    int i=0, j=0, ind=0, s=0;
     for (i = 0; i < k; i++)
     {
         // indice ligne
-        max[i][0] = 0;
+        kmax[i][0] = 0;
         // indice colonne
-        max[i][1] = 0;
+        kmax[i][1] = 0;
     }
-    for (i = 0; i < n_ligne; i++)
+    for ( i = 0; i < n_ligne; i++)
     {
-        for (j = 0; j < n_col; j++)
+        for ( j = 0; j < n_col; j++)
         {
-            ind = 0;
-            while (d[i][j] <= d[max[ind][0]][max[ind][1]] && ind < k)
+            ind=0;
+            while (ind < k && d[i][j] <= d[kmax[ind][0]][kmax[ind][1]])
             {
-                k++;
+                ind++;
             }
             if (ind < k)
             {
                 s = ind + 1;
                 while (s < k)
                 {
-                    max[s][0] = max[s - 1][0];
-                    max[s][1] = max[s - 1][1];
+                    kmax[s][0] = kmax[s - 1][0];
+                    kmax[s][1] = kmax[s - 1][1];
                     s++;
                 }
-                max[ind][0] = i;
-                max[ind][1] = j;
+                kmax[ind][0] = i;
+                kmax[ind][1] = j;
             }
         }
     }
-    return max;
+    return kmax;
 }
 
 int **matrice_hist(int npixels, int *hist, int len_hist, int ecart_x, int esp_haut, int esp_gauche, int esp_bas, int esp_droite, int longeur, int val_rep, int val_in)
@@ -581,7 +596,7 @@ int **matrice_hist(int npixels, int *hist, int len_hist, int ecart_x, int esp_ha
     // dessin des tirets sur la ligne verticale
     y1 = longeur + esp_haut - 1;
     y2 = y1 + 3;
-    for (i = 0; i <= len_hist; i++)
+    for (i = 0; i <= len_hist+1; i++)
     {
         x1 = esp_gauche + i * ecart_x - 1;
         x2 = x1;
@@ -589,14 +604,74 @@ int **matrice_hist(int npixels, int *hist, int len_hist, int ecart_x, int esp_ha
     }
 
     // tracez des rectangles
-    y2 = longeur + esp_haut - 4;
+    y2 = longeur + esp_haut - 1;
     int taille;
     for (i = 0; i < len_hist; i++)
     {
         taille = longeur * hist[i] / npixels;
         x1 = esp_gauche + (1 + i) * ecart_x - 1;
-        y1 = y2 + 3 - taille;
+        y1 = y2 - taille;
         replace_on_rectangle_(r, lig, col, x1, y1, ecart_x, taille, val_in);
     }
     return r;
+}
+int **matrice_profil(int npixels, int *prof, int len_prof, int ecart_x, int esp_haut, int esp_gauche, int esp_bas, int esp_droite, int longeur, int val_rep, int val_in)
+{
+    int col = esp_gauche + esp_droite + (len_prof + 2) * ecart_x, lig = esp_haut + esp_bas + longeur;
+    int **r = create_matrix(lig, col);
+    int i, j;
+    for (i = 0; i < lig; i++)
+        for (j = 0; j < col; j++)
+            r[i][j] = 255;
+
+    // dessin de la ligne horizontale
+    int x1 = esp_gauche - 1, y1 = esp_haut - 1, x2 = esp_gauche - 1, y2 = esp_haut + longeur - 1;
+    replace_on_line_(r, x1, y1, x2, y2, val_rep);
+
+    // dessin de la ligne verticale
+    x1 += (len_prof + 2) * ecart_x;
+    y1 += longeur;
+    replace_on_line_(r, x1, y1, x2, y2, val_rep);
+
+    // dessin des tirets sur la ligne horizontale
+    x1 = esp_gauche - 5;
+    x2 = esp_gauche - 1;
+    for (i = 0; i <= 4; i++)
+    {
+        y1 = esp_haut + i * longeur / 4 - 1;
+        y2 = y1;
+        replace_on_line_(r, x1, y1, x2, y2, val_rep);
+    }
+
+    // dessin des tirets sur la ligne verticale
+    y1 = longeur + esp_haut - 1;
+    y2 = y1 + 3;
+    for (i = 0; i <= len_prof; i++)
+    {
+        x1 = esp_gauche + i * ecart_x - 1;
+        x2 = x1;
+        replace_on_line_(r, x1, y1, x2, y2, val_rep);
+    }
+
+    // tracez des lignes
+    const int y_barre_horizontale = longeur + esp_haut - 1;
+    int taille = longeur * prof[0] / npixels;
+    x1 = esp_gauche + ecart_x - 1;
+    y1 = y_barre_horizontale - taille;
+    r[y1][x1] = val_in;
+    for (i = 1; i < len_prof; i++)
+    {
+        taille = longeur * prof[i] / npixels;
+        x2 = esp_gauche + (1 + i) * ecart_x - 1;
+        y2 = y_barre_horizontale - taille;
+        replace_on_line_(r, x1, y1, x2, y2, val_in);
+        x1=x2;y1=y2;
+    }
+    return r;
+}
+int moy_v(int* v, int n){
+    int s = 0,i=0;
+    for (i = 0; i < n; i++)
+        s += v[i];
+    return s/n;
 }

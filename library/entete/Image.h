@@ -128,15 +128,15 @@ ImageG *moins_G(ImageG *, ImageG *);
 
 /*permet d'obtenir le profil d'intensite d'une image a niveau de gris
  */
-Vector *profil_intensite_G(ImageG *, int x1, int y1, int x2, int y2);
+int**profil_intensite_G(ImageG *, int x1, int y1, int x2, int y, int* len);
 
 /*permet de tracer le segment [(x1,y1) (x2,y2)] de niveau de gris val_replace sur l'image
  */
-ImageG *draw_segmentG(ImageG *, int x1, int y1, int x2, int y2, int val_replace);
+void draw_segmentG(ImageG *, int x1, int y1, int x2, int y2, int val_replace);
 
 /*permet de tracer le circle [(x1,y1) (x2,y2)] de niveau de gris val_replace sur l'image
  */
-ImageG *draw_circleG(ImageG *, int xr, int yr, double rayon, int val_replace);
+ImageG* draw_circleG(ImageG *, int xr, int yr, double rayon, int val_replace);
 
 /*permet d'obtenir l'inverse d'une image a niveau de gris
  */
@@ -144,11 +144,11 @@ ImageG *inverseG(ImageG *img);
 
 /*permet de dessiner un disque sur une image a niveau de gris
  */
-ImageG *drawDisqueG(ImageG *img, int xr, int yr, double rayon, int val_replace);
+void drawDisqueG(ImageG *img, int xr, int yr, double rayon, int val_replace);
 
 /*permet de dessiner un rectangle plein sur une image a niveau de gris
  */
-ImageG *drawRectangleG(ImageG *img, int xr, int yr, double longueur, double largeur, int val_replace);
+void drawRectangleG(ImageG *img, int xr, int yr, double longueur, double largeur, int val_replace);
 
 /*permet de realiser l'operation de convolution d'une image a niveau de gris et d'un filtre
  */
@@ -186,26 +186,19 @@ ImageG *kmeansG(ImageG *img, int K, double e1, double e2);
  */
 ImageG *germeG(ImageG *img, int x, int y, double e);
 
-/*permet d' obtenir la matrice de la partie reelle du spectre de fourier
- */
-int **matrix_spectre_fourier_reelle(ImageG *img);
+/*permet d'obtenir une image agrandit de l'image de depart k fois plus grande*/
+ImageG *interpolation_knnG(ImageG *img, int k);
 
-/*permet d' obtenir la matrice de la partie imaginaire du spectre de fourier
- */
-int **matrix_spectre_fourier_imaginaire(ImageG *img);
-
-/*permet de retourner dans le domaine discret de part le domaine frequentiel de fourier
-grace aux images de la partie imaginaire et reelle du spectre de fourier
--- pour des images a niveaux de gris
- */
-ImageG *transform_fourier_revG(ImageG *img_f_reelle, ImageG *img_f_imaginaire);
-
+/*permet d'obtenir une image agrandit de l'image de depart k fois plus grande*/
+ImageG *interpolation_bilG(ImageG *img);
 
 // PROTOTYPES DES FONCTIONS DE BASE D'IMAGES POUR LES IMAGES COULEURS
 //-------------------------------------------------------------------
+/*permet d'obtenir un histogramme en couleur depuis un ensemble d'entiers*/
+ImageC* histogrameGC(int* hist, int len);
 
-ImageC* histogrameC(int* hist, int len);
-
+/*permet d'obtenir un profil en couleur depuis un ensemble d'entiers*/
+ImageC* profilGC(int* prof, int len);
 
 // PROTOTYPES DES FONCTIONS DE BASE D'IMAGES IMPLIQUANT AU MOINS DEUX TYPES D'IMAGES
 //----------------------------------------------------------------------------------
@@ -234,4 +227,17 @@ ImageG *ouG(ImageB *img1, ImageG *img2);
  */
 ImageB *ouB(ImageB *img1, ImageB *img2);
 
+/*PAS ENCORE TERMINE*/
+/*permet d' obtenir la matrice de la partie reelle du spectre de fourier
+ */
+int **matrix_spectre_fourier_reelle(ImageG *img);
+
+/*permet d' obtenir la matrice de la partie imaginaire du spectre de fourier
+ */
+int **matrix_spectre_fourier_imaginaire(ImageG *img);
+/*permet de retourner dans le domaine discret de part le domaine frequentiel de fourier
+grace aux images de la partie imaginaire et reelle du spectre de fourier
+-- pour des images a niveaux de gris
+ */
+ImageG *transform_fourier_revG(ImageG *img_f_reelle, ImageG *img_f_imaginaire);
 #endif // IMAGE_H_INCLUDED

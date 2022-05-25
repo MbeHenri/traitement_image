@@ -1,6 +1,7 @@
 #ifndef BASE_H_INCLUDED
 #define BASE_H_INCLUDED
 
+#define PI 3.141592653589793
 #include "Vector.h"
 
 // PROTOTYPES DES FONCTIONS DE CREATION, DE COPIE ET DE LIBERATION D'ESPACE
@@ -72,7 +73,7 @@ int **ou_(int **d1, int **d2, int n_ligne, int n_col, int a);
 
 /* permet d'obtenir le profil d'intensite d'un segment [(x1,y1) (x2,y2)]
  */
-Vector *profil_intensite_(int **d, int x1, int y1, int x2, int y2);
+int**profil_intensite_(int **d, int x1, int y1, int x2, int y2, int* len);
 
 /* permet d'obtenir d'une matrice d'entiers et d'un seuil dans ]0, 255[
 une matrice de valeurs {0, 1} tel que si on a la valeur d'un entier est inferieur a
@@ -109,6 +110,10 @@ int **difference(int **d, int n_ligne, int n_col, int a);
  */
 int **replace_line_(int **d, int n_ligne, int n_col, int x1, int y1, int x2, int y2, int val_replace);
 
+/* permet de remplacer par 'val_replace' les valeurs du segment [(x1,y1) (x2,y2)]
+ */
+void replace_on_line_(int **d, int x1, int y1, int x2, int y2, int val_replace);
+
 /* permet de remplacer par 'val_replace' les valeurs du disque ((xr,yr), rayon) (on met dans une autre matrice)
  */
 int **replace_circle_(int **d, int n_ligne, int n_col, int xr, int yr, double rayon, int val_replace);
@@ -120,11 +125,6 @@ int **replace_disque_(int **d, int n_ligne, int n_col, int xr, int yr, double ra
 /* permet de remplacer par 'val_replace' les valeurs du rectangle ((xr,yr), longueur, largeur) (on met dans une autre matrice)
  */
 int **replace_rectangle_(int **d, int n_ligne, int n_col, int xr, int yr, double longueur, double largueur, int val_replace);
-
-
-/* permet de remplacer par 'val_replace' les valeurs du segment [(x1,y1) (x2,y2)]
- */
-void replace_on_line_(int **d, int x1, int y1, int x2, int y2, int val_replace);
 
 /* permet de remplacer par 'val_replace' les valeurs du disque ((xr,yr), rayon)
  */
@@ -145,4 +145,9 @@ int **selection_k_max(int **d, int n_ligne, int n_col, int k);
 /* permet d'obtenir une matrice d'entier issues d'un ensemble de valeurs ordonnees pour une image */
 int**matrice_hist(int nbpixels,int* hist, int len_hist, int ecart_x, int esp_haut, int esp_gauche, int esp_bas, int esp_droite, int longeur, int val_rep, int val_in);
 
+/* permet d'obtenir une matrice d'entier issues d'un ensemble de valeurs ordonnees pour une image */
+int**matrice_profil(int nbpixels,int* prof, int len_prof, int ecart_x, int esp_haut, int esp_gauche, int esp_bas, int esp_droite, int longeur, int val_rep, int val_in);
+
+//moyenne de vecteur d'entier
+int moy_v(int* v, int n);
 #endif // BASE_H_INCLUDED

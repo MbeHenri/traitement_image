@@ -1,0 +1,35 @@
+NOM
+       profilIntensite
+
+SYNTAXE
+        profilIntensite -h|--help
+        profilIntensite <chemin image source> <x1> <y1> <x2> <y2>[<chemin du profil en image> [<chemin du profil en texte>[<chemin de l'image avec le segment>]]]
+
+DESCRIPTION
+       permet d'obtenir le profil d'intensite d'un segment sur l'image (representé par ses points d'extremité)
+       on pourrait 
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        profilIntensite -h
+        profilIntensite --help
+        profilIntensite 1.pgm 10 30 50 300 
+                méttra le profil en image resultant dans le dossier courant avec le nom "1-profil(10-30-50-300).ppm"
+                l'image de depart avec le segment dans "1-avec(10-30-50-300).pgm"
+                et le profil en texte dans "1-profil(10-30-50-300).txt"
+                
+        profilIntensite 1.pgm 10 30 50 300 res.ppm
+                res.ppm contiendra le profil en image
+                
+        profilIntensite 1.pgm 10 30 50 300 res.ppm res2.txt
+                res.ppm contiendra le profil en image
+                res2.ppm contiendra le profil en texte
+                
+        profilIntensite 1.pgm 10 30 50 300 res.ppm res2.txt res3.pgm
+                res.ppm contiendra le profil en image
+                res2.ppm contiendra le profil en texte
+                res3.ppm contiendra l'image de depart avec le segment en question
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

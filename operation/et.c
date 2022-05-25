@@ -29,6 +29,7 @@ int main(int argc, char const *argv[])
                 printf("%c", car);
             } while (car != EOF);
             printf("\n");
+            fclose(f);
         }
         return 0;
     }
@@ -48,6 +49,7 @@ int main(int argc, char const *argv[])
         exit(1);
     }
     ImageB* img1 = read_B(f);
+    fclose(f);
     
     //on cherche les chemins de destination
     char *dest1 = NULL;
@@ -56,6 +58,7 @@ int main(int argc, char const *argv[])
         char* current_dir = get_current_dir_name();
         if (current_dir == NULL)
         {
+            free_ImageB(img1);
             exit(1);
         }
         i_file* info = info_file(argv[1]);
@@ -65,16 +68,18 @@ int main(int argc, char const *argv[])
         strcat(dest1,"/");
         strcat(dest1,info->name);
         strcat(dest1,"-et.ppm");
+        free(current_dir);
+        free_i_file(info);
     }else{
         dest1 = malloc((1+strlen(argv[3]))*sizeof(char));
         strcpy(dest1, argv[3]);
     }
    
     // on charge la deuxieme image
-    fclose(f);
     f = fopen(argv[2], "r");
     if (f == NULL)
     {
+        free_ImageB(img1);
         printf("[ il n'est pas possible d'ouvrir le fichier ]\n");
         exit(1);
     }
@@ -86,6 +91,8 @@ int main(int argc, char const *argv[])
         //on calcule le "et" entre les images
         if (img1->nLigne!= img2->nLigne || img1->nColonne!= img2->nColonne)
         {
+            free_ImageB(img2);
+            free_ImageB(img1);
             printf("[ les images non pas la meme dimension ]\n");
             exit(1);
         }
@@ -99,7 +106,7 @@ int main(int argc, char const *argv[])
             write_B(r,dest1);
             free(dest1);
         }
-        
+        free_ImageB(r);
     }
     else if (strcmp(ch, "P2") == 0)
     {
@@ -108,6 +115,8 @@ int main(int argc, char const *argv[])
         //on calcule le et logique
         if (img1->nLigne!= img2->nLigne || img1->nColonne!= img2->nColonne)
         {
+            free_ImageG(img2);
+            free_ImageB(img1);
             printf("[ les images non pas la meme dimension ]\n");
             exit(1);
         }
@@ -125,6 +134,7 @@ int main(int argc, char const *argv[])
     }
     else if (strcmp(ch, "P3") == 0)
     {
+        free_ImageB(img1);
         printf("> pas encore pris en charge\n");
         fclose(f);
     }
@@ -132,7 +142,6 @@ int main(int argc, char const *argv[])
     {
         printf("[ format de fichier non pris en charge ]\n");
         free_ImageB(img1);
-        
         if(dest1!=NULL){
             free(dest1);
         }

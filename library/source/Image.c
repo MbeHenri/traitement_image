@@ -270,25 +270,16 @@ ImageG *moins_G(ImageG *img1, ImageG *img2)
     return img;
 }
 
-Vector *profil_intensite_G(ImageG *img, int x1, int y1, int x2, int y2)
+int**profil_intensite_G(ImageG *img, int x1, int y1, int x2, int y2, int* len)
 {
-    return profil_intensite_(img->data, x1, y1, x2, y2);
+    return profil_intensite_(img->data, x1, y1, x2, y2, len);
 }
 
-ImageG *draw_segmentG(ImageG *img, int x1, int y1, int x2, int y2, int val_replace)
+void draw_segmentG(ImageG *img, int x1, int y1, int x2, int y2, int val_replace)
 {
-    ImageG *r = (ImageG *)malloc(sizeof(ImageG));
-    if (r == NULL)
-    {
-        printf("[ il est impossible d'allouer de la memoire pour l'image resultante ]\n");
-        exit(1);
-    }
-    r->nLigne = img->nLigne;
-    r->nColonne = img->nColonne;
-    r->data = replace_line_(img->data, img->nLigne, img->nColonne, x1, y1, x2, y2, val_replace);
-    return r;
+    replace_on_line_(img->data, x1, y1, x2, y2, val_replace);
 }
-ImageG *draw_circleG(ImageG *img, int xr, int yr, double rayon, int val_replace)
+ImageG* draw_circleG(ImageG *img, int xr, int yr, double rayon, int val_replace)
 {
     ImageG *r = (ImageG *)malloc(sizeof(ImageG));
     if (r == NULL)
@@ -302,32 +293,14 @@ ImageG *draw_circleG(ImageG *img, int xr, int yr, double rayon, int val_replace)
     return r;
 }
 
-ImageG *drawDisqueG(ImageG *img, int xr, int yr, double rayon, int val_replace)
+void drawDisqueG(ImageG *img, int xr, int yr, double rayon, int val_replace)
 {
-    ImageG *r = (ImageG *)malloc(sizeof(ImageG));
-    if (r == NULL)
-    {
-        printf("[ il est impossible d'allouer de la memoire pour l'image resultante ]\n");
-        exit(1);
-    }
-    r->nLigne = img->nLigne;
-    r->nColonne = img->nColonne;
-    r->data = replace_disque_(img->data, img->nLigne, img->nColonne, xr, yr, rayon, val_replace);
-    return r;
+    replace_on_disque_(img->data, img->nLigne, img->nColonne, xr, yr, rayon, val_replace, val_replace);
 }
 
-ImageG *drawRectangleG(ImageG *img, int xr, int yr, double longueur, double largeur, int val_replace)
+void drawRectangleG(ImageG *img, int xr, int yr, double longueur, double largeur, int val_replace)
 {
-    ImageG *r = (ImageG *)malloc(sizeof(ImageG));
-    if (r == NULL)
-    {
-        printf("[ il est impossible d'allouer de la memoire pour l'image resultante ]\n");
-        exit(1);
-    }
-    r->nLigne = img->nLigne;
-    r->nColonne = img->nColonne;
-    r->data = replace_rectangle_(img->data, img->nLigne, img->nColonne, xr, yr, longueur, largeur, val_replace);
-    return r;
+    replace_on_rectangle_(img->data, img->nLigne, img->nColonne, xr, yr, longueur, largeur, val_replace);
 }
 
 ImageB *binarisationG(ImageG *img, double seuil)
@@ -545,7 +518,7 @@ ImageG *germeG(ImageG *img, int x, int y, double e)
     return ouG(r, img);
 }
 
-ImageC* histogrameC(int* hist, int len){
+ImageC* histogrameGC(int* hist, int len){
     ImageC *img = malloc(sizeof(ImageC));
     if (img == NULL)
     {
@@ -566,4 +539,48 @@ ImageC* histogrameC(int* hist, int len){
     img->g = matrice_hist(n,hist,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,214);
     img->b = matrice_hist(n,hist,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,214);
     return img;
+}
+ImageC* profilGC(int* prof, int len){
+    ImageC *img = malloc(sizeof(ImageC));
+    if (img == NULL)
+    {
+        exit(1);
+    }
+    img->nLigne = img->nLigne;
+    img->nColonne = img->nColonne;
+    int n = 0,i =0;
+    for (i = 0; i < len; i++)
+        if(n < prof[i])
+            n = prof[i];
+    
+    const int ecart_x = 3, esp_haut = 50, esp_gauche=50, esp_bas=50, esp_droite=50, longeur=120;
+    img->nLigne = esp_haut+ esp_bas+ longeur;
+    img->nColonne = esp_gauche + esp_droite + (len+2)*ecart_x;
+    
+    img->r = matrice_profil(n,prof,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,37);
+    img->g = matrice_profil(n,prof,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,116);
+    img->b = matrice_profil(n,prof,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,116);
+    return img;
+}
+ImageG *interpolation_knnG(ImageG *img, int k){
+    ImageG *r = malloc(sizeof(ImageG));
+    if (r == NULL)
+    {
+        exit(1);
+    }
+    r->nLigne = img->nLigne*k;
+    r->nColonne = img->nColonne*k;
+    r->data = interpolation_knn(img->data, img->nLigne, img->nColonne, k,k);
+    return r;
+}
+ImageG *interpolation_bilG(ImageG *img){
+    ImageG *r = malloc(sizeof(ImageG));
+    if (r == NULL)
+    {
+        exit(1);
+    }
+    r->nLigne = img->nLigne*2-1;
+    r->nColonne = img->nColonne*2-1;
+    r->data = interpolation_bilineaire(img->data, img->nLigne, img->nColonne);
+    return r;
 }

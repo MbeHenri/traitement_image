@@ -30,8 +30,8 @@ int main(int argc, char const *argv[])
                 printf("%c", car);
             } while (car != EOF);
             printf("\n");
+            fclose(f);
         }
-        
         return 0;
     }
     //lecture du premier fichier
@@ -55,10 +55,16 @@ int main(int argc, char const *argv[])
         //on recupere le ratio
         if (argv[2]==NULL)
         {
+            free_ImageG(imgd);
             printf("[ le ration n'as pas été donné ]\n");
             exit(1);
         }
-        double ratio = atof(argv[2]);
+        double ratio = 0; ratio=atof(argv[2]);
+        if(ratio <= 0){
+            free_ImageG(imgd);
+            printf("[ le ration n'es pas positif ]\n");
+            exit(1);
+        }
         //on calcule le fois
         ImageG *img = fois_G(imgd, ratio);
         //on libere
@@ -71,6 +77,7 @@ int main(int argc, char const *argv[])
             char* current_dir = get_current_dir_name();
             if (current_dir == NULL)
             {
+            free_ImageG(img);
                 exit(1);
             }
             i_file* info = info_file(argv[1]);
@@ -83,6 +90,7 @@ int main(int argc, char const *argv[])
             strcat(dest1,argv[2]);
             strcat(dest1,").pgm");
             free(current_dir);
+            free_i_file(info);
         }else{
             dest1 = malloc((1+strlen(argv[3]))*sizeof(char));
             strcpy(dest1, argv[3]);

@@ -1,0 +1,24 @@
+NOM
+       binarisation
+
+SYNTAXE
+        binarisation -h|--help
+        binarisation <chemin image source> <seuil de binarisation>[<chemin de l'binarisation en image>]
+
+DESCRIPTION
+       permet de binariser l'image suivant un seuil compris entre 0 et 255,
+       les images pris en compte sont ceux de format ppm, pgm et fournir une image binaire
+       les valeurs comprise dans [0..seuil[ sont mis a 'noir=1', et ceux [seuil..255] sont mis a 'blanc=0'
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        binarisation -h
+        binarisation --help
+        binarisation 1.pgm 50.5
+            méttra l'image resultat dans le dossier courant avec le nom "1-bin(50.5).pbm"
+        binarisation 1.pgm 50.5 res.pbm
+
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri
