@@ -1,0 +1,23 @@
+NOM
+       gradient
+
+SYNTAXE
+        gradient -h|--help
+        gradient <chemin image source> <type> [<chemin de l'image resultante>]
+DESCRIPTION
+        permet d'obtenir le gradient d'une image en tenant compte du type de gradient
+        "type" est soit "sobel" soit "prewitt" 
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        gradient -h
+        gradient --help
+        gradient 1.pgm sobel
+                méttra le profil en image resultant dans le dossier courant avec le nom "1-gd(sobel).pgm"
+                
+        gradient 1.pgm sobel res.pgm
+                
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

@@ -1,0 +1,24 @@
+NOM
+       drawDisque
+
+SYNTAXE
+        drawDisque -h|--help
+        drawDisque <chemin image source> <x> <y> <rayon> <couleur>[<chemin en image>]
+        (x,y) etant le point a l'extreme gauche du rectangle
+DESCRIPTION
+       permet de tracer un disque sur l'image
+       on pourrait 
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        drawDisque -h
+        drawDisque --help
+        drawDisque 1.pgm 10 30 50 300 
+                méttra le profil en image resultant dans le dossier courant avec le nom "1-avec(10-30*50).pgm"
+                
+        drawDisque 1.pgm 10 30 50 300 res.pgm
+                
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

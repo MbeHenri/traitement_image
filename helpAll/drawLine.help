@@ -1,0 +1,24 @@
+NOM
+       drawLine
+
+SYNTAXE
+        drawLine -h|--help
+        drawLine <chemin image source> <x1> <y1> <x2> <y2>[<chemin du profil en image>]
+
+DESCRIPTION
+       permet de tracer un segment sur l'image (representé par ses points d'extremité)
+       on pourrait 
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        drawLine -h
+        drawLine --help
+        drawLine 1.pgm 10 30 50 300 
+                méttra le profil en image resultant dans le dossier courant avec le nom "1-avec(10-30-50-300).pgm"
+                
+        drawLine 1.pgm 10 30 50 300 res.pgm
+                
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

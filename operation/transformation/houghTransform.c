@@ -196,7 +196,7 @@ int main(int argc, char const *argv[])
         int i=0,x1=0,y1=0,x2=0,y2=0;
         double angle = 0;
         f =fopen(dest2, "w");
-        fprintf(f, "x1;y1;x2;y2\n");
+        fprintf(f, "%d\n", K);
         for (i = 0; i < K ; i++){
             angle = PI*theta->data[kmax[i][1]]/180;
             if (cos(angle)==0)

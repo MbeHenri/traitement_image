@@ -31,7 +31,7 @@ Filtre *read_filtre(const char *path)
     FILE *f = fopen(path, "r");
     if (f == NULL)
     {
-        exit(1);
+        return NULL;
     }
 
     Filtre *result = malloc(sizeof(Filtre));

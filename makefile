@@ -109,6 +109,10 @@ drawDisque :   $(liste_objets) $(src_pg)/dessin/drawDisque.c
 drawLine :   $(liste_objets) $(src_pg)/dessin/drawLine.c 
 	$(CC) -c $(src_pg)/dessin/drawLine.c -o $(dir_o)/drawLine.o $(CFLAGS)
 	$(CC) $(dir_o)/drawLine.o $(liste_objets) -o $(dir_exec)/drawLine $(CFLAGS)
+	
+drawLines :   $(liste_objets) $(src_pg)/dessin/drawLines.c 
+	$(CC) -c $(src_pg)/dessin/drawLines.c -o $(dir_o)/drawLines.o $(CFLAGS)
+	$(CC) $(dir_o)/drawLines.o $(liste_objets) -o $(dir_exec)/drawLines $(CFLAGS)
 
 drawRectangle :   $(liste_objets) $(src_pg)/dessin/drawRectangle.c 
 	$(CC) -c $(src_pg)/dessin/drawRectangle.c -o $(dir_o)/drawRectangle.o $(CFLAGS)
@@ -121,6 +125,14 @@ convoluerMedian :   $(liste_objets) $(src_pg)/convolution/convoluerMedian.c
 convoluer :   $(liste_objets) $(src_pg)/convolution/convoluer.c
 	$(CC) -c $(src_pg)/convolution/convoluer.c -o $(dir_o)/convoluer.o $(CFLAGS)
 	$(CC) $(dir_o)/convoluer.o $(liste_objets) -o $(dir_exec)/convoluer $(CFLAGS)
+
+gradient :   $(liste_objets) $(src_pg)/convolution/gradient.c
+	$(CC) -c $(src_pg)/convolution/gradient.c -o $(dir_o)/gradient.o $(CFLAGS)
+	$(CC) $(dir_o)/gradient.o $(liste_objets) -o $(dir_exec)/gradient $(CFLAGS)
+	
+laplacien :   $(liste_objets) $(src_pg)/convolution/laplacien.c
+	$(CC) -c $(src_pg)/convolution/laplacien.c -o $(dir_o)/laplacien.o $(CFLAGS)
+	$(CC) $(dir_o)/laplacien.o $(liste_objets) -o $(dir_exec)/laplacien $(CFLAGS)
 	
 houghTransform : $(liste_objets) $(src_pg)/transformation/houghTransform.c
 	$(CC) -c $(src_pg)/transformation/houghTransform.c -o $(dir_o)/houghTransform.o $(CFLAGS)

@@ -1,0 +1,30 @@
+NOM
+       convoluer
+
+SYNTAXE
+        convoluer -h|--help
+        convoluer <chemin image source> <chemi du filtre>[<chemin de l'image resultat>]
+
+DESCRIPTION
+       permet d'obtenir l'image resultante de la convolution d'un filtre et de l'image source
+       le filtre est un fichier qui devra avoir le formatdont l'exemple est le suivant
+       1
+       12 54 54
+       54 54 21
+       48 24 52
+       Ici le nombre c'est un filtre 3*3
+       si la somme des valeurs du filtre donne 0 alors on ne normalisera pas le fitre,dans le cas contraire on le fera
+       la somme du filtre du filtre doit etre superieur ou egale a zero
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        convoluer -h
+        convoluer --help
+        convoluer 1.pgm filtre
+            méttra l'image resultat dans le dossier courant avec le nom "1-conv(filtre).pbm"
+        convoluer 1.pgm filtre res.pgm
+
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

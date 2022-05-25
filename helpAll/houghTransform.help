@@ -20,13 +20,14 @@ DESCRIPTION
         - ecart_beta : ecart permettant de rendre distret [beta_min..beta_max]
         - couleur : permet d'indiquer si on prendra le point a "1" (blanc) ou a "0" (noir)
         
-        le dossier des segments est decrit comme suit
-                x1;y1;x2;y2
-                0;10;24;0
+        le fichier des segments est decrit comme suit
+                30
+                0;10;24;5
                 .
                 .
                 .
-        (x1,y1) et (x2,y2) representent les extremites des segments 
+        (x1=0,y1=10) et (x2=24,y2=5) representent les extremites des segments 
+       "30" representant le nombre de segment
 OPTIONS
         -h|--help permet d'obtenir cette aide
 

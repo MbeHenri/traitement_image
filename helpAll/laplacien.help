@@ -1,0 +1,22 @@
+NOM
+       laplacien
+
+SYNTAXE
+        laplacien -h|--help
+        laplacien <chemin image source> <indicateur> [<chemin de l'image resultante>]
+DESCRIPTION
+        permet d'obtenir le laplacien d'une image en tenant compte de l'indicateur de laplacien
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        laplacien -h
+        laplacien --help
+        laplacien 1.pgm 1
+                méttra le profil en image resultant dans le dossier courant avec le nom "1-lp(1).pgm"
+                
+        laplacien 1.pgm 1 res.pgm
+                
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

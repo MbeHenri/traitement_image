@@ -20,7 +20,7 @@ int main(int argc, char const *argv[])
     // on verifie si le premier argument est --help ou -h 
     if (strcmp(argv[1], "--help")==0 || strcmp(argv[1], "-h")==0)
     {
-        f=fopen("helpAll/binarisation.help", "r");
+        f=fopen("helpAll/profilIntensite.help", "r");
         int car = 0;
         if (f != NULL)
         {
@@ -65,15 +65,12 @@ int main(int argc, char const *argv[])
             printf("[ un des points ne se trouve pas dans l'image (les coordonnees ne correspondent pas) ]\n");
             exit(1);
         }
-        int n = 0,moy=0,ligne=0;
+        int n = 0,moy=0,ligne=255;
         int** v = profil_intensite_G(img, x1,y1,x2,y2,&n);
         moy = moy_v(v[0],n);
         if (moy>128)
-            ligne=255;
-        
-        ImageG *r = draw_segmentG(img, x1,y1, x2,y2,ligne); 
-        free_ImageG(img);
-        
+            ligne=0;
+        draw_segmentG(img, x1,y1, x2,y2,ligne);
         //on cherche les chemins de destination 
         char *dest1 = NULL;
         char* dest2 = NULL;
@@ -83,7 +80,7 @@ int main(int argc, char const *argv[])
             char* current_dir = get_current_dir_name();
             if (current_dir == NULL)
             {
-                free_ImageG(r);
+                free_ImageG(img);
                 free_matrix(v,3);
                 exit(1);
             }
@@ -124,6 +121,7 @@ int main(int argc, char const *argv[])
             strcat(dest3,"-avec(");
             strcat(dest3, segment_str);
             strcat(dest3,").ppm");
+            free(segment_str);
             free(current_dir);
             free_i_file(info);
         }else{
@@ -138,6 +136,12 @@ int main(int argc, char const *argv[])
                 }
             }
         }
+        if (dest3 != NULL)
+        {
+            write_G(img, dest3);
+            free(dest3);
+        }
+        free_ImageG(img);
         if (dest1 != NULL)
         {
             ImageC* profilImg = profilGC(v[0],n);
@@ -158,13 +162,7 @@ int main(int argc, char const *argv[])
             fclose(f);  
             free(dest2);
         }
-        if (dest3 != NULL)
-        {
-            write_G(r, dest3);
-            free(dest3);
-        }
         free_matrix(v, 3);
-        free_ImageG(r);
     }
     else if (strcmp(ch, "P3") == 0)
     {
