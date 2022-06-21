@@ -19,7 +19,7 @@ int main(int argc, char const *argv[])
     // on verifie si le premier argument est --help ou -h 
     if (strcmp(argv[1], "--help")==0 || strcmp(argv[1], "-h")==0)
     {
-        f=fopen("helpAll/kmeans.help", "r");
+        f=fopen("helpAll/seuillage_multiple.help", "r");
         int car = 0;
         if (f != NULL)
         {
@@ -32,7 +32,7 @@ int main(int argc, char const *argv[])
         }
         return 0;
     }
-    //on recupere la premiere image
+    //lecture du premier fichier
     f = fopen(argv[1], "r");
     if (f == NULL)
     {
@@ -41,31 +41,58 @@ int main(int argc, char const *argv[])
     }
     char ch[5];
     fscanf(f, "%s\n", ch);
-    if( strcmp(ch, "P1") == 0){
+    if (strcmp(ch, "P1") == 0)
+    {
         printf("> rien a faire \n");
         fclose(f);
-    }else if (strcmp(ch, "P2") == 0)
+    }
+    else if (strcmp(ch, "P2") == 0)
     {
-        ImageG * img = read_G(f);
+        ImageG *img = read_G(f);
         fclose(f);
-        if (argv[2] == NULL || argv[3]==NULL || argv[4]==NULL)
+        f = fopen(argv[2], "r");
+        if (f == NULL)
         {
             free_ImageG(img);
-            printf("[ entrez les parametres importants a savoir le nombre de clusters, les seuil de convergences de centres et d'inertie intra-classe ]\n");
+            printf("[ il est impossible d'ouvrir le chemin du fichier des segments ]\n");
             exit(1);
         }
-        int K=0;K=atoi(argv[2]);
-        double e1 =0; e1=atof(argv[3]);
-        double e2 =0; e2=atof(argv[4]);
-        if (K<=0 || e1<=0 || e2<=0)
+        int len = 0;
+        fscanf(f, "%d", &len);
+        if (len < 1)
         {
             free_ImageG(img);
-            printf("[ les parametres doivent etre positives ]\n");
+            printf("[ mauvais nombre de segment ]\n");
+            fclose(f);
             exit(1);
         }
+        double *s = malloc(len * sizeof(int));
+        int i = 0, j=0;
+        for (i = 0; i < len; i++){
+            fscanf(f, "%lf", &s[i]);
+            if(s[i]<=0 || s[i]>=255){
+                free(s);
+                printf("[ un des segments n'est pas compris strictement entre 0 et 255 ]\n");
+                free_ImageG(img);
+                fclose(f);
+                exit(1);
+            }
+            for ( j = 0; j < i; j++)
+            {
+                if (s[i]==s[j])
+                {
+                    free(s);
+                    printf("[ il y' as occurence de segment ]\n");
+                    free_ImageG(img);
+                    fclose(f);
+                    exit(1);
+                }
+            }
+        }
+        fclose(f);
         //on cherche le chemin de destination 
         char *dest1 = NULL;
-        if (argv[5] == NULL)
+        if (argv[3] == NULL)
         {
             char* current_dir = get_current_dir_name();
             if (current_dir == NULL)
@@ -74,32 +101,38 @@ int main(int argc, char const *argv[])
                 exit(1);
             }
             i_file* info = info_file(argv[1]);
-            dest1 = malloc((16+strlen(info->name)+strlen(argv[2])+strlen(current_dir))*sizeof(char));
+            i_file* info1 = info_file(argv[2]);
+            dest1 = malloc((15+strlen(info->name)+strlen(current_dir)+strlen(info1->name))*sizeof(char));
             dest1[0]='\0';
             strcat(dest1,current_dir);
             strcat(dest1,"/");
             strcat(dest1,info->name);
-            strcat(dest1,"-(");
-            strcat(dest1,argv[2]);
-            strcat(dest1,")means.pgm");
+            strcat(dest1,"-sm(");
+            strcat(dest1,info1->name);
+            strcat(dest1,").pgm");
             free_i_file(info);
+            free_i_file(info1);
             free(current_dir);
         }else{
-            dest1 = malloc((1+strlen(argv[5]))*sizeof(char));
-            strcpy(dest1, argv[5]);
+            dest1 = malloc((1+strlen(argv[3]))*sizeof(char));
+            strcpy(dest1, argv[3]);
         }
         if (dest1!=NULL)
         {
-            ImageG* r = kmeansG(img, K,e1,e2);
+            printf("...\n");
+            ImageG *r = seuillage_multipleG(img, s, len);
             write_G(r, dest1);
-            free_ImageG(r);
             free(dest1);
         }
         free_ImageG(img);
-    }else if( strcmp(ch, "P3") == 0){
-        printf("> pas encore pris en charge \n");
+    }
+    else if (strcmp(ch, "P3") == 0)
+    {
+        printf("> pas encore pris en charge\n");
         fclose(f);
-    }else{
+    }
+    else
+    {
         printf("[ format de fichier non pris en charge ]\n");
         fclose(f);
         exit(1);

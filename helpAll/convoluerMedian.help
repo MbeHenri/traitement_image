@@ -1,12 +1,12 @@
 NOM
-       convoluer
+       convoluerMedian
 
 SYNTAXE
         convoluerMedian -h|--help
         convoluerMedian <chemin image source> <pas de voisins>[<chemin de l'image resultat>]
 
 DESCRIPTION
-       permet d'obtenir une image resultante de l'application du filtre sur l'image source
+       permet d'obtenir une image resultante de l'application du filtre median sur l'image source
 
 OPTIONS
         -h|--help permet d'obtenir cette aide
@@ -15,7 +15,7 @@ EXEMPLES
         convoluerMedian -h
         convoluerMedian --help
         convoluerMedian 1.pgm 2
-            méttra l'image resultat dans le dossier courant avec le nom "1-convM(2).pbm"
+            méttra l'image resultante dans le dossier courant avec le nom "1-convM(2).pgm"
         convoluerMedian 1.pgm 2 res.pgm
 
 AUTEUR

@@ -19,7 +19,7 @@ int main(int argc, char const *argv[])
     // on verifie si le premier argument est --help ou -h 
     if (strcmp(argv[1], "--help")==0 || strcmp(argv[1], "-h")==0)
     {
-        f=fopen("helpAll/inverse.help", "r");
+        f=fopen("helpAll/transformation_lineaire_morceau.help", "r");
         int car = 0;
         if (f != NULL)
         {

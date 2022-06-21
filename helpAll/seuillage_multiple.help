@@ -1,0 +1,27 @@
+NOM
+       seuillage_multiple
+
+SYNTAXE
+        seuillage_multiple -h|--help
+        seuillage_multiple <chemin image source> <fichier de segment>]
+
+DESCRIPTION
+       permet d'obtenir le resultat de la transpose lineaire par morceau sur l'image source
+       de part un ensemble de barres de segmentation S1,S2,...,Sn donnés (compris entre 0 et 255) dans un fichier
+       sous la forme:
+       
+               n
+               S1 S2 ... Sn
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        seuillage_multiple -h
+        seuillage_multiple --help
+        seuillage_multiple 1.pgm segs.txt
+                méttra l'image resultante dans le dossier courant avec le nom "1-sm(segs).pgm"    
+        seuillage_multiple 1.pgm segs.txt res.pgm
+                
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

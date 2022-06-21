@@ -315,6 +315,42 @@ ImageB *binarisationG(ImageG *img, double seuil)
     r->data = binarisation(img->data, img->nLigne, img->nColonne, seuil);
     return r;
 }
+ImageG *seuillageG(ImageG *img, double seuil)
+{
+    ImageG *r = malloc(sizeof(ImageG));
+    if (r == NULL)
+    {
+        exit(1);
+    }
+    r->nLigne = img->nLigne;
+    r->nColonne = img->nColonne;
+    r->data = seuillage(img->data, img->nLigne, img->nColonne, seuil);
+    return r;
+}
+ImageG *seuillage_multipleG(ImageG *img, double* seuils, int n)
+{
+    ImageG *r = malloc(sizeof(ImageG));
+    if (r == NULL)
+    {
+        exit(1);
+    }
+    r->nLigne = img->nLigne;
+    r->nColonne = img->nColonne;
+    r->data = seuillage_multiple(img->data, img->nLigne, img->nColonne, seuils, n);
+    return r;
+}
+ImageG *seuillage_auto_otsuG(ImageG *img)
+{
+    ImageG *r = malloc(sizeof(ImageG));
+    if (r == NULL)
+    {
+        exit(1);
+    }
+    r->nLigne = img->nLigne;
+    r->nColonne = img->nColonne;
+    r->data = seuillage_auto_otsu(img->data, img->nLigne, img->nColonne);
+    return r;
+}
 ImageG *grisB(ImageB *img)
 {
     ImageG *r = malloc(sizeof(ImageG));
@@ -416,6 +452,38 @@ ImageG *convolutionMedianG(ImageG *img, int pas)
     r->data = convoluerMedian(img->data, img->nLigne, img->nColonne, pas);
     return r;
 }
+ImageG *convolutionGaussG(ImageG *img, int pas, int ecart_type)
+{
+    ImageG *r = malloc(sizeof(ImageG));
+    if (r == NULL)
+    {
+        exit(1);
+    }
+    r->nLigne = img->nLigne;
+    r->nColonne = img->nColonne;
+    int ** filtreGauss = filtre_gausien(pas, ecart_type);
+    double ** filtreGauss_norm = norm_filtre(filtreGauss, pas);
+    free_matrix(filtreGauss,2*pas+1);
+    r->data = convoluer(img->data, img->nLigne, img->nColonne, filtreGauss_norm, pas);
+    free_matrix_d(filtreGauss_norm,2*pas+1);
+    return r;
+}
+ImageG *convolutionMoyG(ImageG *img, int pas)
+{
+    ImageG *r = malloc(sizeof(ImageG));
+    if (r == NULL)
+    {
+        exit(1);
+    }
+    r->nLigne = img->nLigne;
+    r->nColonne = img->nColonne;
+    int ** filtreMoy = filtre_moyenneur(pas);
+    double ** filtreMoy_norm = norm_filtre(filtreMoy, pas);
+    free_matrix(filtreMoy,2*pas+1);
+    r->data = convoluer(img->data, img->nLigne, img->nColonne, filtreMoy_norm, pas);
+    free_matrix_d(filtreMoy_norm,2*pas+1);
+    return r;
+}
 
 int **transform_hough_occur(ImageB *img, Vector_d *beta, Vector_d *theta, int color)
 {
@@ -507,7 +575,7 @@ ImageG *kmeansG(ImageG *img, int K, double e1, double e2)
 }
 ImageG *germeG(ImageG *img, int x, int y, double e)
 {
-    ImageB *r = malloc(sizeof(ImageB));
+    ImageG *r = malloc(sizeof(ImageB));
     if (r == NULL)
     {
         exit(1);
@@ -515,7 +583,11 @@ ImageG *germeG(ImageG *img, int x, int y, double e)
     r->nLigne = img->nLigne;
     r->nColonne = img->nColonne;
     r->data = germe(img->data, img->nLigne, img->nColonne, x, y, e);
-    return ouG(r, img);
+    ImageB* b = binarisationG(r, 50);
+    free_ImageG(r);
+    r= ouG(b,img);
+    free_ImageB(b);
+    return r;
 }
 
 ImageC* histogrameGC(int* hist, int len){

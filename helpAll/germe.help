@@ -1,0 +1,24 @@
+NOM
+       germe
+
+SYNTAXE
+        germe -h|--help
+        germe <chemin image source> <x> <y> <e>[<chemin de l'germe en image>]
+
+DESCRIPTION
+       permet d'obtenir une image segmenter de la portion d'une image touchée par un germe implanté au coordonnée (x,y) de l'image 
+       le critere d'homegenité entre un pixel et son voisin est defini par la distance de manathan suivant un seuil "e"
+       si cette distance est inferieur au seuil , alors les deux pic-xels sont homogenes dans le cas contraire ce ne sera pa le cas
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        germe -h
+        germe --help
+        germe 1.pgm 15 30 10
+            méttra l'image resultat dans le dossier courant avec le nom "1-ge(15-30*10).pgm"
+        germe 1.pgm 15 30 10 res.pgm
+
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

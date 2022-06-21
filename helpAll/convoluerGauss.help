@@ -1,0 +1,22 @@
+NOM
+       convoluerGauss
+
+SYNTAXE
+        convoluerGauss -h|--help
+        convoluerGauss <chemin image source> <pas de voisins> <ecart type>[<chemin de l'image resultat>]
+
+DESCRIPTION
+       permet d'obtenir une image resultante de l'application du filtre gaussien sur l'image source
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        convoluerGauss -h
+        convoluerGauss --help
+        convoluerGauss 1.pgm 2 0.5
+            méttra l'image resultante dans le dossier courant avec le nom "1-convM(2*0.5).pgm"
+        convoluerGauss 1.pgm 2 0.5 res.pgm
+
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

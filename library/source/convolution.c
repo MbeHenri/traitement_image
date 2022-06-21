@@ -10,9 +10,9 @@ int **filtre_gausien(int pas, double ecart_type)
     int n = 2 * pas + 1;
     int **result = create_matrix(n, n);
     int y, x;
-    for (y = 0; y < n; y++)
-        for (x = 0; x < n; x++)
-            result[y][x] = exp(-(y * y + x * x) / (2 * ecart_type * ecart_type));
+    for (y = -pas; y <=pas; y++)
+        for (x = -pas; x <= pas; x++)
+            result[y+pas][x+pas] = exp(-(y * y + x * x) / (2 * ecart_type * ecart_type));
     return result;
 }
 int **filtre_moyenneur(int pas)

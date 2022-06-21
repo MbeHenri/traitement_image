@@ -1,0 +1,22 @@
+NOM
+       convoluerMoyenne
+
+SYNTAXE
+        convoluerMoyenne -h|--help
+        convoluerMoyenne <chemin image source> <pas de voisins>[<chemin de l'image resultat>]
+
+DESCRIPTION
+       permet d'obtenir une image resultante de l'application du filtre moyenneur sur l'image source
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        convoluerMoyenne -h
+        convoluerMoyenne --help
+        convoluerMoyenne 1.pgm 2
+            méttra l'image resultante dans le dossier courant avec le nom "1-convMoy(2).pgm"
+        convoluerMoyenne 1.pgm 2 res.pgm
+
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

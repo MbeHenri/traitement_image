@@ -1,0 +1,25 @@
+NOM
+       kmeans
+
+SYNTAXE
+        kmeans -h|--help
+        kmeans <chemin image source> <k> <e1> <e2>[<chemin de l'kmeans en image>]
+
+DESCRIPTION
+       permet d'obtenir une image segmenter en "k" ensembles de couleur, 
+       avec "e1" carcterisant le seuil de convergence des clusters
+       et "e2" caracterisant le seuil de convergence de l'inertie intra-clusters(classes)
+       on arrete le processus de segmentation uniquement à, la satisfaction d'un de ces seuils 
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        kmeans -h
+        kmeans --help
+        kmeans 1.pgm 2 0.0001 125544
+            méttra l'image resultat dans le dossier courant avec le nom "1-(2)means.pgm"
+        kmeans 1.pgm 2 0.0001 125544 res.pgm
+
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

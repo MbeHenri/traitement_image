@@ -154,9 +154,15 @@ void drawRectangleG(ImageG *img, int xr, int yr, double longueur, double largeur
  */
 ImageG *convolutionG(ImageG *img, Filtre *filtre);
 
-/*permet de realiser l'operation de convolution d'une image a niveau de gris et d'un filtre
+/*permet de realiser l'operation de convolution mediane d'une image a niveau de gris et d'un filtre
  */
 ImageG *convolutionMedianG(ImageG *img, int pas);
+/*permet de realiser l'operation de convolution gaussienne d'une image a niveau de gris et d'un filtre
+ */
+ImageG *convolutionGaussG(ImageG *img, int pas, int ecart_type);
+/*permet de realiser l'operation de convolution moyenne d'une image a niveau de gris et d'un filtre
+ */
+ImageG *convolutionMoyG(ImageG *img, int pas);
 
 /*permet de convertir une matrice d'entier en une image
  */
@@ -185,6 +191,18 @@ ImageG *kmeansG(ImageG *img, int K, double e1, double e2);
 /*permet d'obtenir la region ici du germe (x,y) sur l'image
  */
 ImageG *germeG(ImageG *img, int x, int y, double e);
+
+/*permet d'obtenir le seuillage simple de l'image a niveau de gris
+ */
+ImageG *seuillageG(ImageG *img, double seuil);
+
+/*permet d'obtenir le seuillage multiple de l'image a niveau de gris
+ */
+ImageG *seuillage_multipleG(ImageG *img, double* seuils, int n);
+
+/*permet d'obtenir le seuillage automatique en s'appuyant sur l'algorithme de otsu, de l'image a niveau de gris
+ */
+ImageG *seuillage_auto_otsuG(ImageG *img);
 
 /*permet d'obtenir une image agrandit de l'image de depart k fois plus grande*/
 ImageG *interpolation_knnG(ImageG *img, int k);

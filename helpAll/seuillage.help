@@ -1,0 +1,23 @@
+NOM
+       seuillage
+
+SYNTAXE
+        seuillage -h|--help
+        seuillage <chemin image source> <seuil de seuillage>[<chemin de l'seuillage en image>]
+
+DESCRIPTION
+       permet de seuiller l'image suivant un seuil compris entre 0 et 255,
+       les images pris en compte sont ceux de format ppm, pgm 
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        seuillage -h
+        seuillage --help
+        seuillage 1.pgm 50.5
+            méttra l'image resultat dans le dossier courant avec le nom "1-s(50.5).pgm"
+        seuillage 1.pgm 50.5 res.pgm
+
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

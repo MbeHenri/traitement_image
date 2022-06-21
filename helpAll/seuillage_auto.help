@@ -1,0 +1,23 @@
+NOM
+       seuillage_auto
+
+SYNTAXE
+        seuillage_auto -h|--help
+        seuillage_auto <chemin image source> <seuil de seuillage_auto>[<chemin de l'seuillage_auto en image>]
+
+DESCRIPTION
+       permet de seuiller automatiquement l'image
+       les images pris en compte sont ceux de format ppm, pgm 
+
+OPTIONS
+        -h|--help permet d'obtenir cette aide
+
+EXEMPLES
+        seuillage_auto -h
+        seuillage_auto --help
+        seuillage_auto 1.pgm 
+            méttra l'image resultat dans le dossier courant avec le nom "1-sauto.pgm"
+        seuillage_auto 1.pgm res.pgm
+
+AUTEUR
+       Mbe Mbe Mindjana Loic Henri

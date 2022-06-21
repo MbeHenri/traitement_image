@@ -507,25 +507,13 @@ int **difference(int **d, int n_ligne, int n_col, int a)
 }
 void sortTab(int *d, int n)
 {
-    tri_bulle_int(d, n);
+    //tri_bulle_int(d, n);
+    qsort(d,n,sizeof(int), compare);
 }
-// TRI FUSION
-void tri_bulle_int(int *tableau, int taille)
-{
-    int i = 0, j = 0, k = taille;
-    int aux;
-    for (i = 0; i < taille; i++)
-    {
-        for (j = 0; j < k - 1; j++)
-        {
-            if (tableau[j] > tableau[j + 1])
-            {
-                aux = tableau[j];
-                tableau[j] = tableau[j + 1];
-                tableau[j + 1] = aux;
-            }
-        }
-    }
+int compare(const void * a, const void * b){
+    const int * pa = a;
+    const int * pb = b;
+    return *pa - *pb;
 }
 
 int **selection_k_max(int **d, int n_ligne, int n_col, int k)

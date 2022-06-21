@@ -23,7 +23,7 @@ EXEMPLES
         convoluer -h
         convoluer --help
         convoluer 1.pgm filtre
-            méttra l'image resultat dans le dossier courant avec le nom "1-conv(filtre).pbm"
+            méttra l'image resultat dans le dossier courant avec le nom "1-conv(filtre).pgm"
         convoluer 1.pgm filtre res.pgm
 
 AUTEUR

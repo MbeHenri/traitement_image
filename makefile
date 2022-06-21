@@ -27,7 +27,9 @@ dir_exec = execute/executables
 
 # > les objets de librairies
 
-liste_objets =$(dir_o)/change_domain.o $(dir_o)/convolution.o $(dir_o)/base.o $(dir_o)/Image.o $(dir_o)/Vector.o $(dir_o)/transformation.o $(dir_o)/segmentation.o $(dir_o)/file.o
+l1 =$(dir_o)/change_domain.o $(dir_o)/convolution.o $(dir_o)/base.o $(dir_o)/Image.o $(dir_o)/Vector.o
+l2 =$(dir_o)/transformation.o $(dir_o)/segmentation.o $(dir_o)/file.o $(dir_o)/stack.o
+liste_objets =$(l1) $(l2)
 
 Vector.o : $(src_lib)/Vector.c
 	$(CC) -c $(src_lib)/Vector.c -o $(dir_o)/Vector.o $(CFLAGS)
@@ -52,6 +54,9 @@ segmentation.o : $(src_lib)/segmentation.c
 	
 file.o : $(src_lib)/file.c
 	$(CC) -c $(src_lib)/file.c -o $(dir_o)/file.o $(CFLAGS)
+
+stack.o : $(src_lib)/stack/stack.c
+	$(CC) -c $(src_lib)//stack/stack.c -o $(dir_o)/stack.o $(CFLAGS)
 	
 # > les executables	
 
@@ -121,7 +126,15 @@ drawRectangle :   $(liste_objets) $(src_pg)/dessin/drawRectangle.c
 convoluerMedian :   $(liste_objets) $(src_pg)/convolution/convoluerMedian.c 
 	$(CC) -c $(src_pg)/convolution/convoluerMedian.c -o $(dir_o)/convoluerMedian.o $(CFLAGS)
 	$(CC) $(dir_o)/convoluerMedian.o $(liste_objets) -o $(dir_exec)/convoluerMedian $(CFLAGS)
-
+	
+convoluerGauss :   $(liste_objets) $(src_pg)/convolution/convoluerGauss.c 
+	$(CC) -c $(src_pg)/convolution/convoluerGauss.c -o $(dir_o)/convoluerGauss.o $(CFLAGS)
+	$(CC) $(dir_o)/convoluerGauss.o $(liste_objets) -o $(dir_exec)/convoluerGauss $(CFLAGS)
+	
+convoluerMoyenne :   $(liste_objets) $(src_pg)/convolution/convoluerMoyenne.c 
+	$(CC) -c $(src_pg)/convolution/convoluerMoyenne.c -o $(dir_o)/convoluerMoyenne.o $(CFLAGS)
+	$(CC) $(dir_o)/convoluerMoyenne.o $(liste_objets) -o $(dir_exec)/convoluerMoyenne $(CFLAGS)
+	
 convoluer :   $(liste_objets) $(src_pg)/convolution/convoluer.c
 	$(CC) -c $(src_pg)/convolution/convoluer.c -o $(dir_o)/convoluer.o $(CFLAGS)
 	$(CC) $(dir_o)/convoluer.o $(liste_objets) -o $(dir_exec)/convoluer $(CFLAGS)
@@ -169,6 +182,18 @@ kmeans : $(liste_objets) $(src_pg)/segmentation/kmeans.c
 germe : $(liste_objets) $(src_pg)/segmentation/germe.c
 	$(CC) -c $(src_pg)/segmentation/germe.c -o $(dir_o)/germe.o $(CFLAGS)
 	$(CC) $(dir_o)/germe.o $(liste_objets) -o $(dir_exec)/germe $(CFLAGS)
+
+seuillage_auto : $(liste_objets) $(src_pg)/segmentation/seuillage_auto.c
+	$(CC) -c $(src_pg)/segmentation/seuillage_auto.c -o $(dir_o)/seuillage_auto.o $(CFLAGS)
+	$(CC) $(dir_o)/seuillage_auto.o $(liste_objets) -o $(dir_exec)/seuillage_auto $(CFLAGS)
+
+seuillage : $(liste_objets) $(src_pg)/segmentation/seuillage.c
+	$(CC) -c $(src_pg)/segmentation/seuillage.c -o $(dir_o)/seuillage.o $(CFLAGS)
+	$(CC) $(dir_o)/seuillage.o $(liste_objets) -o $(dir_exec)/seuillage $(CFLAGS)
+	
+seuillage_multiple : $(liste_objets) $(src_pg)/segmentation/seuillage_multiple.c
+	$(CC) -c $(src_pg)/segmentation/seuillage_multiple.c -o $(dir_o)/seuillage_multiple.o $(CFLAGS)
+	$(CC) $(dir_o)/seuillage_multiple.o $(liste_objets) -o $(dir_exec)/seuillage_multiple $(CFLAGS)
 	
 ###########################
 #                         #

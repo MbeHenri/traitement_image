@@ -87,8 +87,7 @@ int **binarisation(int **d, int n_ligne, int n_col, double seuil);
 /* permet d'obtenir un vecteur crier de part un vecteur de depart
  */
 void sortTab(int *d, int n);
-void tri_bulle_int(int *tableau, int taille);
-
+int compare(const void * a, const void * b);
 /* permet d'obtenir le maximum d'une matrice d'entiers
  */
 int max_(int **d, int n_ligne, int n_col);
