@@ -149,4 +149,9 @@ int**matrice_profil(int nbpixels,int* prof, int len_prof, int ecart_x, int esp_h
 
 //moyenne de vecteur d'entier
 int moy_v(int* v, int n);
+
+int pusisance_sup_2(int n);
+double max_d(double **d, int n_ligne, int n_col);
+double min_d(double **d, int n_ligne, int n_col);
+double ** norm_matrix_d(double ** d, int nLigne, int nCol);
 #endif // BASE_H_INCLUDED

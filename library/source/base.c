@@ -145,6 +145,26 @@ int min_(int **d, int n_ligne, int n_col)
                 m = d[i][j];
     return m;
 }
+double max_d(double **d, int n_ligne, int n_col)
+{
+    double m = __DBL_MIN__;
+    int i = 0, j = 0;
+    for (i = 0; i < n_ligne; i++)
+        for (j = 0; j < n_col; j++)
+            if (d[i][j] > m)
+                m = d[i][j];
+    return m;
+}
+double min_d(double **d, int n_ligne, int n_col)
+{
+    double m = __DBL_MAX__;
+    int i = 0, j = 0;
+    for (i = 0; i < n_ligne; i++)
+        for (j = 0; j < n_col; j++)
+            if (d[i][j] < m)
+                m = d[i][j];
+    return m;
+}
 double contraste_ecart_type(int **d, int n_ligne, int n_col)
 {
     int i = 0, j = 0;
@@ -662,4 +682,20 @@ int moy_v(int* v, int n){
     for (i = 0; i < n; i++)
         s += v[i];
     return s/n;
+}
+int pusisance_sup_2(int n){
+    int val = 1;
+    while (val < n)
+        val*=2;
+    return val;
+}
+double ** norm_matrix_d(double ** d, int nLigne, int nCol){
+    double** result = create_matrix_d(nLigne,nCol);
+    double min = min_d(d, nLigne, nCol), max= max_d(d, nLigne, nCol);
+    int i=0,j=0;
+    for (i = 0; i < nLigne; i++)
+        for (j = 0; j < nCol; j++)
+            result[i][j] = (d[i][j] - min)/(max-min) ;
+        
+    return result;
 }

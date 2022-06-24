@@ -3,6 +3,7 @@
 
 #include "Vector.h"
 #include "convolution.h"
+#include "Complex.h"
 
 // STRUCTURES D'IMAGES
 //-----------------------
@@ -246,13 +247,10 @@ ImageG *ouG(ImageB *img1, ImageG *img2);
 ImageB *ouB(ImageB *img1, ImageB *img2);
 
 /*PAS ENCORE TERMINE*/
-/*permet d' obtenir la matrice de la partie reelle du spectre de fourier
+/*permet d' obtenir la matrice du spectre de fourier
  */
-int **matrix_spectre_fourier_reelle(ImageG *img);
+Complex **spectre_fourier(ImageG *img, int* new_nligne, int* new_nCol);
 
-/*permet d' obtenir la matrice de la partie imaginaire du spectre de fourier
- */
-int **matrix_spectre_fourier_imaginaire(ImageG *img);
 /*permet de retourner dans le domaine discret de part le domaine frequentiel de fourier
 grace aux images de la partie imaginaire et reelle du spectre de fourier
 -- pour des images a niveaux de gris

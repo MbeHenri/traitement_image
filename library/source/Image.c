@@ -94,7 +94,8 @@ ImageB *read_B(FILE *f)
     return img;
 }
 
-ImageC *read_C(FILE *f){
+ImageC *read_C(FILE *f)
+{
     ImageC *img = (ImageC *)malloc(sizeof(ImageC));
     if (img == NULL)
     {
@@ -103,7 +104,8 @@ ImageC *read_C(FILE *f){
     }
     while (fgetc(f) == '#')
     {
-        while (getc(f) != '\n');
+        while (getc(f) != '\n')
+            ;
     }
     int max;
     fseek(f, -1, SEEK_CUR);
@@ -113,8 +115,10 @@ ImageC *read_C(FILE *f){
     img->b = create_matrix(img->nLigne, img->nColonne);
     fscanf(f, "%d", &max);
     int i, j;
-    for (i = 0; i < img->nLigne; i++){
-        for (j = 0; j < img->nColonne; j++){
+    for (i = 0; i < img->nLigne; i++)
+    {
+        for (j = 0; j < img->nColonne; j++)
+        {
             fscanf(f, "%d", &img->r[i][j]);
             fscanf(f, "%d", &img->g[i][j]);
             fscanf(f, "%d", &img->b[i][j]);
@@ -270,7 +274,7 @@ ImageG *moins_G(ImageG *img1, ImageG *img2)
     return img;
 }
 
-int**profil_intensite_G(ImageG *img, int x1, int y1, int x2, int y2, int* len)
+int **profil_intensite_G(ImageG *img, int x1, int y1, int x2, int y2, int *len)
 {
     return profil_intensite_(img->data, x1, y1, x2, y2, len);
 }
@@ -279,7 +283,7 @@ void draw_segmentG(ImageG *img, int x1, int y1, int x2, int y2, int val_replace)
 {
     replace_on_line_(img->data, x1, y1, x2, y2, val_replace);
 }
-ImageG* draw_circleG(ImageG *img, int xr, int yr, double rayon, int val_replace)
+ImageG *draw_circleG(ImageG *img, int xr, int yr, double rayon, int val_replace)
 {
     ImageG *r = (ImageG *)malloc(sizeof(ImageG));
     if (r == NULL)
@@ -327,7 +331,7 @@ ImageG *seuillageG(ImageG *img, double seuil)
     r->data = seuillage(img->data, img->nLigne, img->nColonne, seuil);
     return r;
 }
-ImageG *seuillage_multipleG(ImageG *img, double* seuils, int n)
+ImageG *seuillage_multipleG(ImageG *img, double *seuils, int n)
 {
     ImageG *r = malloc(sizeof(ImageG));
     if (r == NULL)
@@ -461,11 +465,11 @@ ImageG *convolutionGaussG(ImageG *img, int pas, int ecart_type)
     }
     r->nLigne = img->nLigne;
     r->nColonne = img->nColonne;
-    int ** filtreGauss = filtre_gausien(pas, ecart_type);
-    double ** filtreGauss_norm = norm_filtre(filtreGauss, pas);
-    free_matrix(filtreGauss,2*pas+1);
+    int **filtreGauss = filtre_gausien(pas, ecart_type);
+    double **filtreGauss_norm = norm_filtre(filtreGauss, pas);
+    free_matrix(filtreGauss, 2 * pas + 1);
     r->data = convoluer(img->data, img->nLigne, img->nColonne, filtreGauss_norm, pas);
-    free_matrix_d(filtreGauss_norm,2*pas+1);
+    free_matrix_d(filtreGauss_norm, 2 * pas + 1);
     return r;
 }
 ImageG *convolutionMoyG(ImageG *img, int pas)
@@ -477,11 +481,11 @@ ImageG *convolutionMoyG(ImageG *img, int pas)
     }
     r->nLigne = img->nLigne;
     r->nColonne = img->nColonne;
-    int ** filtreMoy = filtre_moyenneur(pas);
-    double ** filtreMoy_norm = norm_filtre(filtreMoy, pas);
-    free_matrix(filtreMoy,2*pas+1);
+    int **filtreMoy = filtre_moyenneur(pas);
+    double **filtreMoy_norm = norm_filtre(filtreMoy, pas);
+    free_matrix(filtreMoy, 2 * pas + 1);
     r->data = convoluer(img->data, img->nLigne, img->nColonne, filtreMoy_norm, pas);
-    free_matrix_d(filtreMoy_norm,2*pas+1);
+    free_matrix_d(filtreMoy_norm, 2 * pas + 1);
     return r;
 }
 
@@ -501,13 +505,31 @@ ImageG *convert_matrixG(int **d, int n_ligne, int n_col)
     r->data = changer_plage(d, n_ligne, n_col, min_(d, n_ligne, n_col), max_(d, n_ligne, n_col), 0, 255);
     return r;
 }
-int **matrix_spectre_fourier_reelle(ImageG *img)
+
+Complex **spectre_fourier(ImageG *img, int* new_nligne, int* new_nCol)
 {
-    return transform_fourier_reelle(img->data, img->nLigne, img->nColonne);
-}
-int **matrix_spectre_fourier_imaginaire(ImageG *img)
-{
-    return transform_fourier_imaginaire(img->data, img->nLigne, img->nColonne);
+    *new_nligne = pusisance_sup_2(img->nLigne); *new_nCol = pusisance_sup_2(img->nColonne);
+    Complex** aux =NULL;
+    if (*new_nligne != img->nLigne || *new_nCol != img->nColonne)
+    {
+        int ** new_d = create_matrix(*new_nligne,*new_nCol);
+        int i=0,j=0;
+        for (i = 0; i < img->nLigne; i++)
+            for (j = 0; j < img->nColonne; j++)
+                new_d[i][j]=img->data[i][j];
+                
+        for (i = img->nLigne; i < *new_nligne; i++)
+            for (j = img->nColonne; j < *new_nCol; j++)
+                new_d[i][j]=0;    
+                
+        aux = convert_matrix_int_to_complex(new_d,*new_nligne,*new_nCol);
+        free_matrix(new_d,*new_nligne);
+    }else{
+        aux = convert_matrix_int_to_complex(img->data,*new_nligne,*new_nCol);
+    }
+    Complex** resultat = transform_fourier_dim2(aux, *new_nligne, *new_nCol);
+    free_matrix_complex(aux,*new_nligne,*new_nCol);
+    return resultat;
 }
 
 ImageG *egaliser_G(ImageG *img)
@@ -583,14 +605,15 @@ ImageG *germeG(ImageG *img, int x, int y, double e)
     r->nLigne = img->nLigne;
     r->nColonne = img->nColonne;
     r->data = germe(img->data, img->nLigne, img->nColonne, x, y, e);
-    ImageB* b = binarisationG(r, 50);
+    ImageB *b = binarisationG(r, 50);
     free_ImageG(r);
-    r= ouG(b,img);
+    r = ouG(b, img);
     free_ImageB(b);
     return r;
 }
 
-ImageC* histogrameGC(int* hist, int len){
+ImageC *histogrameGC(int *hist, int len)
+{
     ImageC *img = malloc(sizeof(ImageC));
     if (img == NULL)
     {
@@ -598,21 +621,22 @@ ImageC* histogrameGC(int* hist, int len){
     }
     img->nLigne = img->nLigne;
     img->nColonne = img->nColonne;
-    int n = 0,i =0;
+    int n = 0, i = 0;
     for (i = 0; i < len; i++)
-        if(n < hist[i])
+        if (n < hist[i])
             n = hist[i];
-    
-    const int ecart_x = 2, esp_haut = 50, esp_gauche=50, esp_bas=50, esp_droite=50, longeur=200;
-    img->nLigne = esp_haut+ esp_bas+ longeur;
-    img->nColonne = esp_gauche + esp_droite + (len+2)*ecart_x;
-    
-    img->r = matrice_hist(n,hist,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,72);
-    img->g = matrice_hist(n,hist,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,214);
-    img->b = matrice_hist(n,hist,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,214);
+
+    const int ecart_x = 2, esp_haut = 50, esp_gauche = 50, esp_bas = 50, esp_droite = 50, longeur = 200;
+    img->nLigne = esp_haut + esp_bas + longeur;
+    img->nColonne = esp_gauche + esp_droite + (len + 2) * ecart_x;
+
+    img->r = matrice_hist(n, hist, len, ecart_x, esp_haut, esp_gauche, esp_bas, esp_droite, longeur, 0, 72);
+    img->g = matrice_hist(n, hist, len, ecart_x, esp_haut, esp_gauche, esp_bas, esp_droite, longeur, 0, 214);
+    img->b = matrice_hist(n, hist, len, ecart_x, esp_haut, esp_gauche, esp_bas, esp_droite, longeur, 0, 214);
     return img;
 }
-ImageC* profilGC(int* prof, int len){
+ImageC *profilGC(int *prof, int len)
+{
     ImageC *img = malloc(sizeof(ImageC));
     if (img == NULL)
     {
@@ -620,39 +644,41 @@ ImageC* profilGC(int* prof, int len){
     }
     img->nLigne = img->nLigne;
     img->nColonne = img->nColonne;
-    int n = 0,i =0;
+    int n = 0, i = 0;
     for (i = 0; i < len; i++)
-        if(n < prof[i])
+        if (n < prof[i])
             n = prof[i];
-    
-    const int ecart_x = 3, esp_haut = 50, esp_gauche=50, esp_bas=50, esp_droite=50, longeur=120;
-    img->nLigne = esp_haut+ esp_bas+ longeur;
-    img->nColonne = esp_gauche + esp_droite + (len+2)*ecart_x;
-    
-    img->r = matrice_profil(n,prof,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,37);
-    img->g = matrice_profil(n,prof,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,116);
-    img->b = matrice_profil(n,prof,len,ecart_x,esp_haut,esp_gauche,esp_bas,esp_droite,longeur,0,116);
+
+    const int ecart_x = 3, esp_haut = 50, esp_gauche = 50, esp_bas = 50, esp_droite = 50, longeur = 120;
+    img->nLigne = esp_haut + esp_bas + longeur;
+    img->nColonne = esp_gauche + esp_droite + (len + 2) * ecart_x;
+
+    img->r = matrice_profil(n, prof, len, ecart_x, esp_haut, esp_gauche, esp_bas, esp_droite, longeur, 0, 37);
+    img->g = matrice_profil(n, prof, len, ecart_x, esp_haut, esp_gauche, esp_bas, esp_droite, longeur, 0, 116);
+    img->b = matrice_profil(n, prof, len, ecart_x, esp_haut, esp_gauche, esp_bas, esp_droite, longeur, 0, 116);
     return img;
 }
-ImageG *interpolation_knnG(ImageG *img, int k){
+ImageG *interpolation_knnG(ImageG *img, int k)
+{
     ImageG *r = malloc(sizeof(ImageG));
     if (r == NULL)
     {
         exit(1);
     }
-    r->nLigne = img->nLigne*k;
-    r->nColonne = img->nColonne*k;
-    r->data = interpolation_knn(img->data, img->nLigne, img->nColonne, k,k);
+    r->nLigne = img->nLigne * k;
+    r->nColonne = img->nColonne * k;
+    r->data = interpolation_knn(img->data, img->nLigne, img->nColonne, k, k);
     return r;
 }
-ImageG *interpolation_bilG(ImageG *img){
+ImageG *interpolation_bilG(ImageG *img)
+{
     ImageG *r = malloc(sizeof(ImageG));
     if (r == NULL)
     {
         exit(1);
     }
-    r->nLigne = img->nLigne*2-1;
-    r->nColonne = img->nColonne*2-1;
+    r->nLigne = img->nLigne * 2 - 1;
+    r->nColonne = img->nColonne * 2 - 1;
     r->data = interpolation_bilineaire(img->data, img->nLigne, img->nColonne);
     return r;
 }

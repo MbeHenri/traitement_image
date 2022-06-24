@@ -28,11 +28,14 @@ dir_exec = execute/executables
 # > les objets de librairies
 
 l1 =$(dir_o)/change_domain.o $(dir_o)/convolution.o $(dir_o)/base.o $(dir_o)/Image.o $(dir_o)/Vector.o
-l2 =$(dir_o)/transformation.o $(dir_o)/segmentation.o $(dir_o)/file.o $(dir_o)/stack.o
+l2 =$(dir_o)/transformation.o $(dir_o)/segmentation.o $(dir_o)/file.o $(dir_o)/stack.o $(dir_o)/Complex.o
 liste_objets =$(l1) $(l2)
 
 Vector.o : $(src_lib)/Vector.c
 	$(CC) -c $(src_lib)/Vector.c -o $(dir_o)/Vector.o $(CFLAGS)
+	
+Complex.o : $(src_lib)/Complex.c
+	$(CC) -c $(src_lib)/Complex.c -o $(dir_o)/Complex.o $(CFLAGS)
 	
 Image.o : $(src_lib)/Image.c
 	$(CC) -c $(src_lib)/Image.c -o $(dir_o)/Image.o $(CFLAGS)
@@ -59,14 +62,17 @@ stack.o : $(src_lib)/stack/stack.c
 	$(CC) -c $(src_lib)//stack/stack.c -o $(dir_o)/stack.o $(CFLAGS)
 	
 # > les executables	
+createImage : $(src_pg)/createImage.c
+	$(CC) $(src_pg)/createImage.c -o $(dir_exec)/createBinaire 
+	
+main : $(liste_objets)  main.c
+	$(CC) -c main.c -o $(dir_o)/main.o $(CFLAGS)
+	$(CC) $(dir_o)/main.o $(liste_objets) -o $(dir_exec)/main $(CFLAGS)
 
 histogramme :  $(liste_objets) $(src_pg)/histogramme.c
 	$(CC) -c $(src_pg)/histogramme.c -o $(dir_o)/histogramme.o $(CFLAGS)
 	$(CC) $(dir_o)/histogramme.o $(liste_objets) -o $(dir_exec)/histogramme $(CFLAGS)
 
-main : $(liste_objets)  main.c
-	$(CC) -c main.c -o $(dir_o)/main.o $(CFLAGS)
-	$(CC) $(dir_o)/main.o $(liste_objets) -o $(dir_exec)/main $(CFLAGS)
 	
 inverse :   $(liste_objets) $(src_pg)/inverse.c
 	$(CC) -c $(src_pg)/inverse.c -o $(dir_o)/inverse.o $(CFLAGS)
@@ -104,8 +110,6 @@ profilIntensite :   $(liste_objets) $(src_pg)/profilIntensite.c
 	$(CC) -c $(src_pg)/profilIntensite.c -o $(dir_o)/profilIntensite.o $(CFLAGS)
 	$(CC) $(dir_o)/profilIntensite.o $(liste_objets) -o $(dir_exec)/profilIntensite $(CFLAGS)
 	
-createImage : $(src_pg)/createImage.c
-	$(CC) $(src_pg)/createImage.c -o $(dir_exec)/createBinaire 
 	
 drawDisque :   $(liste_objets) $(src_pg)/dessin/drawDisque.c
 	$(CC) -c $(src_pg)/dessin/drawDisque.c -o $(dir_o)/drawDisque.o $(CFLAGS)
@@ -146,6 +150,10 @@ gradient :   $(liste_objets) $(src_pg)/convolution/gradient.c
 laplacien :   $(liste_objets) $(src_pg)/convolution/laplacien.c
 	$(CC) -c $(src_pg)/convolution/laplacien.c -o $(dir_o)/laplacien.o $(CFLAGS)
 	$(CC) $(dir_o)/laplacien.o $(liste_objets) -o $(dir_exec)/laplacien $(CFLAGS)
+
+fourierTransform : $(liste_objets) $(src_pg)/transformation/fourierTransform.c
+	$(CC) -c $(src_pg)/transformation/fourierTransform.c -o $(dir_o)/fourierTransform.o $(CFLAGS)
+	$(CC) $(dir_o)/fourierTransform.o $(liste_objets) -o $(dir_exec)/fourierTransform $(CFLAGS)
 	
 houghTransform : $(liste_objets) $(src_pg)/transformation/houghTransform.c
 	$(CC) -c $(src_pg)/transformation/houghTransform.c -o $(dir_o)/houghTransform.o $(CFLAGS)

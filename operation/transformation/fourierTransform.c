@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+
 #include "../../library/entete/Image.h"
+#include "../../library/entete/base.h"
 
 int main(int argc, char const *argv[])
 {
@@ -26,17 +29,41 @@ int main(int argc, char const *argv[])
         printf("> construction du spectre de fourier \n");
         ImageG *img = read_G(f);
         fclose(f);
-        int** rez_m = matrix_spectre_fourier_reelle(img);
-        int** img_m = matrix_spectre_fourier_imaginaire(img);
-        
-        ImageG* img_rez = convert_matrixG(rez_m, img->nLigne, img->nColonne);
-        ImageG* img_img = convert_matrixG(img_m, img->nLigne, img->nColonne);
-        
-        write_G(img_rez, argv[2]);
-        write_G(img_img, argv[3]);
+
+        int i = 0, j = 0, nLigne = 0, nCol = 0;
+        Complex **spec = spectre_fourier(img, &nLigne, &nCol);
+        double d;
+        double **aux = create_matrix_d(nLigne, nCol);
+        for (i = 0; i < nLigne; i++)
+        {
+            for (j = 0; j < nCol; j++)
+            {
+                d = log(1+ norme_complex(spec[i][j]));
+                if (i<nLigne/2 && j<nCol/2)
+                    aux[nLigne/2-i-1][nCol/2-j-1]= d;
+                else if(i<nLigne/2 && j>=nCol/2)
+                    aux[nLigne/2-i-1][3*nCol/2-j-1]=d;
+                else if(i>=nLigne/2 && j<nCol/2)
+                    aux[3*nLigne/2-i-1][nCol/2-j-1]=d;
+                else 
+                    aux[3*nLigne/2-i-1][3*nCol/2-j-1]=d;
+            }
+        }     
+        free_matrix_complex(spec, nLigne, nCol);
+        double **norm = norm_matrix_d(aux, nLigne, nCol);
+        free_matrix_d(aux, nLigne);
+
+        int **val = create_matrix(nLigne, nCol);
+        for (i = 0; i < nLigne; i++)
+            for (j = 0; j < nCol; j++)
+                val[i][j] = norm[i][j] * 255;
+
+        free_matrix_d(norm, nLigne);
+        img = convert_matrixG(val, nLigne, nCol);
+        free_matrix(val, nLigne);
+
+        write_G(img, argv[2]);
         free_ImageG(img);
-        free_ImageG(img_rez);
-        free_ImageG(img_img);
     }
     else if (strcmp(ch, "P3") == 0)
     {
